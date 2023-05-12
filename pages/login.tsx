@@ -1,96 +1,300 @@
-import React, { useState } from 'react'
-import logo from '../public/lms.png'
-import Image from 'next/image'
+import {
+    Box,
+    Flex,
+    Stack,
+    Heading,
+    Text,
+    Container,
+    Input,
+    Button,
+    SimpleGrid,
+    Avatar,
+    AvatarGroup,
+    useBreakpointValue,
+    IconProps,
+    Icon,
+    Select,
+    InputGroup,
+    InputRightElement,
+    IconButton,
+    FormErrorMessage,
+    FormControl,
+} from '@chakra-ui/react'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
-function Login() {
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { signIn } from 'next-auth/react'
+const avatars = [
+    {
+        name: 'Ryan Florence',
+        url: 'https://bit.ly/ryan-florence',
+    },
+    {
+        name: 'Segun Adebayo',
+        url: 'https://bit.ly/sage-adebayo',
+    },
+    {
+        name: 'Kent Dodds',
+        url: 'https://bit.ly/kent-c-dodds',
+    },
+    {
+        name: 'Prosper Otemuyiwa',
+        url: 'https://bit.ly/prosper-baba',
+    },
+    {
+        name: 'Christian Nwamba',
+        url: 'https://bit.ly/code-beast',
+    },
+]
+
+export default function Login() {
+    const schema = yup.object().shape({
+        email: yup.string().required("l'email est un champ obligatoire"),
+        password: yup
+            .string()
+            .required('le mot de passe est un champ obligatoire'),
+    })
     const [showPassword, setShowPassword] = useState(false)
-    const togglePasswordVisibility = () => setShowPassword(!showPassword)
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(schema),
+    })
+
+    const onSubmit = async (data) => {
+        signIn('credentials', {
+            email: data.email,
+            password: data.password,
+            redirect: false,
+        }).then((e) => {
+            console.log(e?.status)
+        })
+    }
+    const handleShowPassword = () => {
+        setShowPassword(!showPassword)
+    }
+
     return (
-        <section className="bg-gray-50 dark:bg-gray-900">
-            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                    <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                        <div className="bg-red flex items-center justify-center">
-                            <Image
-                                src={logo}
-                                alt="Image Description"
-                                width={100}
-                                height={100}
-                            />
-                        </div>
-                        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                            Connectez-vous à votre compte
-                        </h1>
-                        <form className="space-y-4 md:space-y-6" action="#">
-                            <div>
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >
-                                    Email
-                                </label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    id="email"
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="name@company.com"
-                                    required
+        <Box position={'relative'}>
+            <Container
+                as={SimpleGrid}
+                maxW={'7xl'}
+                columns={{ base: 1, md: 2 }}
+                spacing={{ base: 10, lg: 32 }}
+                py={{ base: 10, sm: 20, lg: 10 }}
+            >
+                <Stack spacing={{ base: 10, md: 20 }}>
+                    <Heading
+                        lineHeight={1.1}
+                        fontSize={{
+                            base: '3xl',
+                            sm: '4xl',
+                            md: '5xl',
+                            lg: '6xl',
+                        }}
+                    >
+                        Enseignant(e) professionnels{' '}
+                        <Text
+                            as={'span'}
+                            bgGradient="linear(to-r, red.400,pink.400)"
+                            bgClip="text"
+                        >
+                            &
+                        </Text>{' '}
+                        Cours intéressants
+                    </Heading>
+                    <Stack direction={'row'} spacing={4} align={'center'}>
+                        <AvatarGroup>
+                            {avatars.map((avatar) => (
+                                <Avatar
+                                    key={avatar.name}
+                                    name={avatar.name}
+                                    src={avatar.url}
+                                    position={'relative'}
+                                    zIndex={2}
+                                    _before={{
+                                        content: '""',
+                                        width: 'full',
+                                        height: 'full',
+                                        rounded: 'full',
+                                        transform: 'scale(1.125)',
+                                        bgGradient:
+                                            'linear(to-bl, red.400,pink.400)',
+                                        position: 'absolute',
+                                        zIndex: -1,
+                                        top: 0,
+                                        left: 0,
+                                    }}
                                 />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="password"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >
-                                    Mot de passe
-                                </label>
-                                <div className="flex items-center relative">
-                                    <input
-                                        name="password"
-                                        id="password"
-                                        placeholder="••••••••"
+                            ))}
+                        </AvatarGroup>
+
+                        <Flex
+                            align={'center'}
+                            justify={'center'}
+                            fontFamily={'heading'}
+                            fontSize={{ base: 'sm', md: 'lg' }}
+                            bg={'gray.800'}
+                            color={'white'}
+                            rounded={'full'}
+                            position={'relative'}
+                            _before={{
+                                content: '""',
+                                width: 'full',
+                                height: 'full',
+                                rounded: 'full',
+                                transform: 'scale(1.125)',
+                                bgGradient:
+                                    'linear(to-bl, orange.400,yellow.400)',
+                                position: 'absolute',
+                                zIndex: -1,
+                                top: 0,
+                                left: 0,
+                            }}
+                        ></Flex>
+                    </Stack>
+                </Stack>
+                <Stack
+                    bg={'gray.50'}
+                    rounded={'xl'}
+                    p={{ base: 4, sm: 6, md: 8 }}
+                    spacing={{ base: 4 }}
+                    maxW={{ lg: 'lg' }}
+                >
+                    <Stack spacing={4}>
+                        <Heading
+                            color={'gray.800'}
+                            lineHeight={1.1}
+                            fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}
+                        >
+                            Authentifiez
+                            <Text
+                                as={'span'}
+                                bgGradient="linear(to-r, red.400,pink.400)"
+                                bgClip="text"
+                            >
+                                !
+                            </Text>
+                        </Heading>
+                        <Text
+                            color={'gray.500'}
+                            fontSize={{ base: 'sm', sm: 'md' }}
+                        >
+                            LMS rend la conception et la création d'expériences
+                            de cours accessibles à tous.LMS rend la conception
+                            et la création d'expériences de cours accessibles à
+                            tous.
+                        </Text>
+                    </Stack>
+                    <Box as={'form'} onSubmit={handleSubmit(onSubmit)}>
+                        <Stack spacing={2}>
+                            <Box>
+                                <FormControl isInvalid={errors.email}>
+                                    <Input
+                                        type="email"
+                                        {...register('email', {
+                                            required: true,
+                                        })}
+                                        placeholder="nom@domaine.com"
+                                        bg={'gray.100'}
+                                        border={0}
+                                        color={'gray.500'}
+                                        _placeholder={{
+                                            color: 'gray.500',
+                                        }}
+                                    />
+                                    <FormErrorMessage>
+                                        {errors.email?.message}
+                                    </FormErrorMessage>
+                                </FormControl>
+                            </Box>
+
+                            <FormControl isInvalid={errors.password}>
+                                <InputGroup>
+                                    <Input
+                                        {...register('password')}
+                                        bg={'gray.100'}
+                                        border={0}
+                                        color={'gray.500'}
+                                        _placeholder={{
+                                            color: 'gray.500',
+                                        }}
                                         type={
                                             showPassword ? 'text' : 'password'
                                         }
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        required
+                                        placeholder="Mot de passe"
                                     />
-                                    <button
-                                        className=" absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-500 p-1"
-                                        type="button"
-                                        onClick={togglePasswordVisibility}
-                                    >
-                                        {showPassword ? (
-                                            <EyeSlashIcon className="h-5 w-5" />
-                                        ) : (
-                                            <EyeIcon className="h-5 w-5" />
-                                        )}
-                                    </button>
-                                </div>
-                            </div>
 
-                            <button
-                                type="button"
-                                className="bg-red w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                            >
-                                S'identifier
-                            </button>
-                            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                                Vous n'avez pas encore de compte?{' '}
-                                <a
-                                    href="#"
-                                    className="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                                >
-                                    S'inscrire
-                                </a>
-                            </p>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
+                                    <InputRightElement>
+                                        <IconButton
+                                            icon={
+                                                showPassword ? (
+                                                    <EyeIcon className="fill-red-500" />
+                                                ) : (
+                                                    <EyeSlashIcon className="fill-cyan-900  " />
+                                                )
+                                            }
+                                            size="sm"
+                                            onClick={handleShowPassword}
+                                            aria-label={''}
+                                            //   colorScheme="green"
+                                        />
+                                    </InputRightElement>
+                                </InputGroup>
+                                <FormErrorMessage>
+                                    {errors.password?.message}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </Stack>
+                        <Button
+                            fontFamily={'heading'}
+                            type="submit"
+                            mt={8}
+                            w={'full'}
+                            bgGradient="linear(to-r, red.400,pink.400)"
+                            color={'white'}
+                            _hover={{
+                                bgGradient: 'linear(to-r, red.400,pink.400)',
+                                boxShadow: 'xl',
+                            }}
+                        >
+                            Connexion
+                        </Button>
+                    </Box>
+                </Stack>
+            </Container>
+            <Blur
+                position={'absolute'}
+                top={-10}
+                left={-10}
+                style={{ filter: 'blur(70px)' }}
+            />
+        </Box>
     )
 }
 
-export default Login
+export const Blur = (props: IconProps) => {
+    return (
+        <Icon
+            width={useBreakpointValue({ base: '100%', md: '40vw', lg: '30vw' })}
+            zIndex={useBreakpointValue({ base: -1, md: -1, lg: 0 })}
+            height="560px"
+            viewBox="0 0 528 560"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            {...props}
+        >
+            <circle cx="71" cy="61" r="111" fill="#F56565" />
+            <circle cx="244" cy="106" r="139" fill="#ED64A6" />
+            <circle cy="291" r="139" fill="#ED64A6" />
+            <circle cx="80.5" cy="189.5" r="101.5" fill="#ED8936" />
+            <circle cx="196.5" cy="317.5" r="101.5" fill="#ECC94B" />
+            <circle cx="70.5" cy="458.5" r="101.5" fill="#48BB78" />
+            <circle cx="426.5" cy="-0.5" r="101.5" fill="#4299E1" />
+        </Icon>
+    )
+}
