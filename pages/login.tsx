@@ -19,13 +19,19 @@ import {
     IconButton,
     FormErrorMessage,
     FormControl,
+    Alert,
+    AlertIcon,
+    AlertTitle,
+    AlertDescription,
+    CloseButton,
 } from '@chakra-ui/react'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { signIn } from 'next-auth/react'
+import { SignInOptions, signIn, useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
 const avatars = [
     {
         name: 'Ryan Florence',
@@ -49,7 +55,10 @@ const avatars = [
     },
 ]
 
-export default function Login() {
+const Login = () => {
+    const { data: session, status } = useSession()
+    const router = useRouter()
+    const authLoading = status === 'loading'
     const schema = yup.object().shape({
         email: yup.string().required("l'email est un champ obligatoire"),
         password: yup
@@ -57,6 +66,9 @@ export default function Login() {
             .required('le mot de passe est un champ obligatoire'),
     })
     const [showPassword, setShowPassword] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [authError, setAuthError] = useState('')
+
     const {
         register,
         handleSubmit,
@@ -65,19 +77,33 @@ export default function Login() {
         resolver: yupResolver(schema),
     })
 
-    const onSubmit = async (data) => {
-        signIn('credentials', {
-            email: data.email,
-            password: data.password,
-            redirect: false,
-        }).then((e) => {
-            console.log(e?.status)
-        })
+    const onSubmit = async (cridentials: SignInOptions) => {
+        setLoading(!loading)
+        console.log('message:', cridentials)
+        signIn('credentials', { ...cridentials, redirect: false }).then(
+            async (e) => {
+                if (e?.error !== undefined) {
+                    setAuthError(e?.error?.split(':')[1])
+                    setTimeout(() => {
+                        setAuthError('')
+                    }, 3000)
+                }
+                setLoading(loading)
+                console.log(e?.error?.split(':')[1])
+            }
+        )
     }
     const handleShowPassword = () => {
         setShowPassword(!showPassword)
     }
 
+    useEffect(() => {
+        if (authLoading) return // Do nothing while loading
+
+        if (status === 'authenticated') {
+            if (session?.user.role === 1) router.push('/admin/dashboard')
+        }
+    }, [session, status])
     return (
         <Box position={'relative'}>
             <Container
@@ -190,6 +216,22 @@ export default function Login() {
                             tous.
                         </Text>
                     </Stack>
+                    {authError?.length && (
+                        <Alert status="error">
+                            <AlertIcon />
+                            <Box>
+                                <AlertDescription>{authError}</AlertDescription>
+                            </Box>
+                            <CloseButton
+                                alignSelf="flex-start"
+                                position="relative"
+                                right={-1}
+                                onClick={() => {
+                                    setAuthError('')
+                                }}
+                            />
+                        </Alert>
+                    )}
                     <Box as={'form'} onSubmit={handleSubmit(onSubmit)}>
                         <Stack spacing={2}>
                             <Box>
@@ -262,7 +304,7 @@ export default function Login() {
                                 boxShadow: 'xl',
                             }}
                         >
-                            Connexion
+                            {loading ? 'Connexion...' : 'Connexion'}
                         </Button>
                     </Box>
                 </Stack>
@@ -276,6 +318,7 @@ export default function Login() {
         </Box>
     )
 }
+export default Login
 
 export const Blur = (props: IconProps) => {
     return (

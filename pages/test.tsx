@@ -21,10 +21,13 @@ import {
     FormControl,
 } from '@chakra-ui/react'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { test } from 'node:test'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
 const avatars = [
     {
         name: 'Ryan Florence',
@@ -49,6 +52,8 @@ const avatars = [
 ]
 
 export default function JoinOurTeam() {
+    const { data: session, status } = useSession()
+    const router = useRouter()
     const schema = yup.object().shape({
         email: yup.string().required("l'email est un champ obligatoire"),
         address: yup.string().required("l'addresse est un champ obligatoire"),
@@ -73,7 +78,11 @@ export default function JoinOurTeam() {
     const handleShowPassword = () => {
         setShowPassword(!showPassword)
     }
-
+    useEffect(() => {
+        if (status === 'authenticated') {
+            if (session?.user.role === 1) router.push('/change-password')
+        }
+    }, [session, status])
     return (
         <Box position={'relative'}>
             <Container
