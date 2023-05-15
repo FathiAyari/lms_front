@@ -9,22 +9,27 @@ import { FC, useEffect } from 'react'
 interface Props {
     children: React.ReactNode
 }
+const Noop: FC<Props> = ({ children }) => <>{children}</>
 
 const App: FC<CustomAppProps> = ({
     Component,
     pageProps: { session, ...pageProps },
 }) => {
+
+    const Layout = (Component as any).Layout || Noop
     /*  const router = useRouter()
     useEffect(() => {
         if (session?.user.role !== 1) router.push('/test')
     }, []) */
     return (
-        <SessionProvider session={session}>
-            {' '}
+        // <SessionProvider session={session}>
+        //     {' '}
             <ChakraProvider>
-                <Component {...pageProps} />{' '}
+               <Layout pageProps={pageProps}>
+              <Component {...pageProps} />
+            </Layout>
             </ChakraProvider>
-        </SessionProvider>
+        // </SessionProvider>
     )
 }
 
