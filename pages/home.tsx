@@ -17,7 +17,8 @@ import Testimonial from '@/components/Testimonial';
 
 const Home = () => {
   return (
-      <Box w={"100%"}><VStack >
+    <Box w={"100%"}>
+      <VStack >
           <Navbar />
           <Container maxW={'100%'}>
       <Stack
@@ -62,7 +63,7 @@ System
           </Container>
           <Statistic/>
       </VStack>
-          <Testimonial/>
+      <Testimonial/>
       <Footer/>
       </Box>
       
