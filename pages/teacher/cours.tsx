@@ -1,6 +1,6 @@
 import LayoutTeacher from '@/components/layoutTeacher'
 import { fetcher } from '@/lib/fetcher';
-import { Box, Button, FormControl, FormLabel, Heading, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Table, Tbody, Td, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react'
+import { Box, Button, FormControl, FormLabel, Heading, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Table, Tbody, Td, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { BiPencil } from 'react-icons/bi';
 import { BsPlus } from 'react-icons/bs';
@@ -109,7 +109,11 @@ const Cours = () => {
 
             <FormControl mt={4}>
               <FormLabel>Catégorie</FormLabel>
-              <Input placeholder='Categorie' onChange={(e)=>setCategorie(e.target.value)} value={categorie}/>
+              <Select placeholder='Select Categorie'>
+  <option value='option1'>Option 1</option>
+  <option value='option2'>Option 2</option>
+  <option value='option3'>Option 3</option>
+</Select>
                       </FormControl>
                       
             <FormControl mt={4}>
