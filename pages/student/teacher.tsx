@@ -1,55 +1,19 @@
-import {
-    Box,
-    Flex,
-    Stack,
-    Heading,
-    Text,
-    Container,
-    Input,
-    Button,
-    SimpleGrid,
-    Avatar,
-    AvatarGroup,
-    useBreakpointValue,
-    IconProps,
-    Icon,
-    Select,
-    InputGroup,
-    InputRightElement,
-    IconButton,
-    FormErrorMessage,
-    FormControl,
-} from '@chakra-ui/react'
+import LayoutAdmin from '@/components/layoutAdmin'
+import { Box, Button,  Heading, IconButton,Tab,TabList,TabPanel,TabPanels,Table,Tabs,Tbody,Td,Text, Th, Thead, Tr, useColorModeValue, FormControl, FormLabel,  Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, useDisclosure, InputRightElement, FormErrorMessage, Stack, InputGroup } from '@chakra-ui/react'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-const avatars = [
-    {
-        name: 'Ryan Florence',
-        url: 'https://bit.ly/ryan-florence',
-    },
-    {
-        name: 'Segun Adebayo',
-        url: 'https://bit.ly/sage-adebayo',
-    },
-    {
-        name: 'Kent Dodds',
-        url: 'https://bit.ly/kent-c-dodds',
-    },
-    {
-        name: 'Prosper Otemuyiwa',
-        url: 'https://bit.ly/prosper-baba',
-    },
-    {
-        name: 'Christian Nwamba',
-        url: 'https://bit.ly/code-beast',
-    },
-]
+import { useRouter } from 'next/router'
 
-export default function Register() {
-    const schema = yup.object().shape({
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { BiPencil } from 'react-icons/bi'
+import { BsPlus } from 'react-icons/bs'
+import { MdDeleteOutline } from 'react-icons/md'
+import * as yup from 'yup'
+
+
+
+  const schema = yup.object().shape({
         email: yup.string().required("l'email est un champ obligatoire"),
         address: yup.string().required("l'addresse est un champ obligatoire"),
         mobile_no: yup.string().required('le gsm est un champ obligatoire'),
@@ -59,6 +23,22 @@ export default function Register() {
             .required('le mot de passe est un champ obligatoire'),
         full_name: yup.string().required('le nom est un champ obligatoire'),
     })
+
+const Teacher = () => {
+     const { isOpen, onOpen, onClose } = useDisclosure()
+  const initialRef = React.useRef(null)
+    const finalRef = React.useRef(null)
+
+
+    const colors = useColorModeValue(
+    ['red.50',  'blue.50'],
+    ['red.900', 'blue.900'],
+  )
+  const [tabIndex, setTabIndex] = useState(0)
+  const bg = colors[tabIndex]
+    const router = useRouter()
+    
+    
     const [showPassword, setShowPassword] = useState(false)
     const {
         register,
@@ -74,120 +54,104 @@ export default function Register() {
         setShowPassword(!showPassword)
     }
 
-    return (
-        <Box position={'relative'}>
-            <Container
-                as={SimpleGrid}
-                maxW={'7xl'}
-                columns={{ base: 1, md: 2 }}
-                spacing={{ base: 10, lg: 32 }}
-                py={{ base: 10, sm: 20, lg: 10 }}
-            >
-                <Stack spacing={{ base: 10, md: 20 }}>
-                    <Heading
-                        lineHeight={1.1}
-                        fontSize={{
-                            base: '3xl',
-                            sm: '4xl',
-                            md: '5xl',
-                            lg: '6xl',
-                        }}
-                    >
-                        Enseignant(e) professionnels{' '}
-                        <Text
-                            as={'span'}
-                            bgGradient="linear(to-r, red.400,pink.400)"
-                            bgClip="text"
-                        >
-                            &
-                        </Text>{' '}
-                        Cours intéressants
-                    </Heading>
-                    <Stack direction={'row'} spacing={4} align={'center'}>
-                        <AvatarGroup>
-                            {avatars.map((avatar) => (
-                                <Avatar
-                                    key={avatar.name}
-                                    name={avatar.name}
-                                    src={avatar.url}
-                                    position={'relative'}
-                                    zIndex={2}
-                                    _before={{
-                                        content: '""',
-                                        width: 'full',
-                                        height: 'full',
-                                        rounded: 'full',
-                                        transform: 'scale(1.125)',
-                                        bgGradient:
-                                            'linear(to-bl, red.400,pink.400)',
-                                        position: 'absolute',
-                                        zIndex: -1,
-                                        top: 0,
-                                        left: 0,
-                                    }}
-                                />
-                            ))}
-                        </AvatarGroup>
+  return (
+      <Box w={"100%"} p={6}>
+          
+      <Heading textAlign={"center"} py={16}>All Teachers</Heading>   <Box display={"flex"} w={"100%"} alignItems={"end"} justifyContent={"end"} p={6}> <Button onClick={onOpen} rightIcon={<BsPlus />} colorScheme='blue' variant='outline'>
+   Ajouter
+  </Button></Box>
+      <Tabs isFitted variant='enclosed' onChange={(index) => setTabIndex(index)} bg={bg} >
+  <TabList mb='1em' >
+    <Tab >New Users</Tab>
+    <Tab >Users Accepted</Tab>
+  </TabList>
+  <TabPanels overflow={"auto"}>
+    <TabPanel>
+ <Table variant="striped" colorScheme="gray" bg={"white"}>
 
-                        <Flex
-                            align={'center'}
-                            justify={'center'}
-                            fontFamily={'heading'}
-                            fontSize={{ base: 'sm', md: 'lg' }}
-                            bg={'gray.800'}
-                            color={'white'}
-                            rounded={'full'}
-                            position={'relative'}
-                            _before={{
-                                content: '""',
-                                width: 'full',
-                                height: 'full',
-                                rounded: 'full',
-                                transform: 'scale(1.125)',
-                                bgGradient:
-                                    'linear(to-bl, orange.400,yellow.400)',
-                                position: 'absolute',
-                                zIndex: -1,
-                                top: 0,
-                                left: 0,
-                            }}
-                        ></Flex>
-                    </Stack>
-                </Stack>
-                <Stack
-                    bg={'gray.50'}
-                    rounded={'xl'}
-                    p={{ base: 4, sm: 6, md: 8 }}
-                    spacing={{ base: 4 }}
-                    maxW={{ lg: 'lg' }}
-                >
-                    <Stack spacing={4}>
-                        <Heading
-                            color={'gray.800'}
-                            lineHeight={1.1}
-                            fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}
-                        >
-                            Rejoignez-nous
-                            <Text
-                                as={'span'}
-                                bgGradient="linear(to-r, red.400,pink.400)"
-                                bgClip="text"
-                            >
-                                !
-                            </Text>
-                        </Heading>
-                        <Text
-                            color={'gray.500'}
-                            fontSize={{ base: 'sm', sm: 'md' }}
-                        >
-                            LMS rend la conception et la création d&apos;expériences
-                            de cours accessibles à tous.LMS rend la conception
-                            et la création d&apos;expériences de cours accessibles à
-                            tous.
-                        </Text>
-                    </Stack>
-                    <Box as={'form'} onSubmit={handleSubmit(onSubmit)}>
-                        <Stack spacing={2}>
+      
+          
+      <Thead>
+        <Tr>
+          <Th>Name</Th>
+          <Th>Email</Th>
+          <Th>Action</Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {[]?.map((item:any) => (
+          <Tr key={item.id}>
+            <Td>{item.title}</Td>
+            <Td>{item.categorie}</Td>
+            <Td>{item.description}</Td>
+            <Td>
+              <IconButton
+                aria-label="View assignment"
+                icon={<BiPencil />}
+                variant="ghost"
+                    />
+                    <IconButton
+                aria-label="View assignment"
+                icon={<MdDeleteOutline />}
+                variant="ghost"
+              />
+            </Td>
+          </Tr>
+        ))}
+      </Tbody>
+          </Table>
+    </TabPanel>
+    <TabPanel>
+ <Table variant="striped" colorScheme="gray" bg={"white"}>
+
+      
+          
+      <Thead>
+        <Tr>
+          <Th>Name</Th>
+          <Th>Email</Th>
+          <Th>Role</Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {[]?.map((item:any) => (
+          <Tr key={item.id}>
+            <Td>{item.title}</Td>
+            <Td>{item.categorie}</Td>
+            <Td>{item.description}</Td>
+            <Td>
+              <IconButton
+                aria-label="View assignment"
+                icon={<BiPencil />}
+                variant="ghost"
+                    />
+                    <IconButton
+                aria-label="View assignment"
+                icon={<MdDeleteOutline />}
+                variant="ghost"
+              />
+            </Td>
+          </Tr>
+        ))}
+      </Tbody>
+          </Table>
+    </TabPanel>
+  </TabPanels>
+</Tabs>
+         
+      
+      <Modal
+        initialFocusRef={initialRef}
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Ajouter Cours</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+             <Stack spacing={2}>
                             <Box>
                                 <FormControl isRequired>
                                     <Input
@@ -275,7 +239,7 @@ export default function Register() {
                                         <option selected value="1">
                                             Enseignant(e)
                                         </option>
-                                        <option value="2">Etudiant(e)</option>
+
                                     </Select>
                                 </InputGroup>
                                 <FormErrorMessage>
@@ -320,51 +284,19 @@ export default function Register() {
                                 </FormErrorMessage>
                             </FormControl>
                         </Stack>
-                        <Button
-                            fontFamily={'heading'}
-                            type="submit"
-                            mt={8}
-                            w={'full'}
-                            bgGradient="linear(to-r, red.400,pink.400)"
-                            color={'white'}
-                            _hover={{
-                                bgGradient: 'linear(to-r, red.400,pink.400)',
-                                boxShadow: 'xl',
-                            }}
-                        >
-                            Soumettre
-                        </Button>
-                    </Box>
-                </Stack>
-            </Container>
-            <Blur
-                position={'absolute'}
-                top={-10}
-                left={-10}
-                style={{ filter: 'blur(70px)' }}
-            />
-        </Box>
-    )
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} >
+              Save
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+</Box>
+  )
 }
 
-export const Blur = (props: IconProps) => {
-    return (
-        <Icon
-            width={useBreakpointValue({ base: '100%', md: '40vw', lg: '30vw' })}
-            zIndex={useBreakpointValue({ base: -1, md: -1, lg: 0 })}
-            height="560px"
-            viewBox="0 0 528 560"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            {...props}
-        >
-            <circle cx="71" cy="61" r="111" fill="#F56565" />
-            <circle cx="244" cy="106" r="139" fill="#ED64A6" />
-            <circle cy="291" r="139" fill="#ED64A6" />
-            <circle cx="80.5" cy="189.5" r="101.5" fill="#ED8936" />
-            <circle cx="196.5" cy="317.5" r="101.5" fill="#ECC94B" />
-            <circle cx="70.5" cy="458.5" r="101.5" fill="#48BB78" />
-            <circle cx="426.5" cy="-0.5" r="101.5" fill="#4299E1" />
-        </Icon>
-    )
-}
+export default Teacher
+Teacher.Layout=LayoutAdmin

@@ -14,14 +14,15 @@ import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "@react-pdf-viewer/toolbar/lib/styles/index.css";
 import LayoutUser from "@/components/layoutUser";
 import { Box } from "@chakra-ui/react";
+import PDFReader from "@/components/PDFReader";
 
 interface Props {
   url: string;
 }
 
-const pdf="/cour.pdf"
+const pdf="http://192.168.137.200:8000/api/show-file/cour.pdf"
 
-const PDFReader = () => {
+const Details = () => {
   const defaultLayoutPluginProps: DefaultLayoutPluginProps = {
     sidebarTabs: () => [],
     renderToolbar: (Toolbar: (props: ToolbarProps) => React.ReactElement) =>
@@ -80,19 +81,12 @@ const PDFReader = () => {
           w={"100%"}
           h={"100vh"}
     >
-      <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js`}>
-        <Viewer
-          fileUrl={pdf}
-          plugins={[
-            // @ts-ignore
-            defaultLayoutPluginInstance,
-          ]}
-        />
-      </Worker>
+ <PDFReader pdfUrl={pdf} />
+      
     </Box>
   );
 };
 
-export default PDFReader;
+export default Details;
 
-PDFReader.Layout=LayoutUser
+Details.Layout=LayoutUser
