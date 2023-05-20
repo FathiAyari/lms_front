@@ -2,12 +2,13 @@ import 'next-auth'
 
 declare module 'next-auth' {
     interface User {
+        id: number
         full_name: string
         email: string
         mobile_no: string
         address: string
         interested_categories: Array
-        role: number
+        role: any
     }
 
     interface Session {
