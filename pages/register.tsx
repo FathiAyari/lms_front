@@ -53,7 +53,7 @@ export default function Register() {
         email: yup.string().required("l'email est un champ obligatoire"),
         address: yup.string().required("l'addresse est un champ obligatoire"),
         mobile_no: yup.string().required('le gsm est un champ obligatoire'),
-        role_id: yup.string().required('le type est un champ obligatoire'),
+        role: yup.string().required('le type est un champ obligatoire'),
         password: yup
             .string()
             .required('le mot de passe est un champ obligatoire'),
@@ -67,6 +67,7 @@ export default function Register() {
     } = useForm({
         resolver: yupResolver(schema),
     })
+    console.log(errors)
     const onSubmit = async (data) => {
 
         try {
@@ -285,11 +286,12 @@ export default function Register() {
                                             color: 'gray.500',
                                         }}
                                         placeholder="Selectioner le type"
+                                        defaultValue={""}
                                     >
-                                        <option selected value="1">
+                                        <option selected value="2">
                                             Enseignant(e)
                                         </option>
-                                        <option value="2">Etudiant(e)</option>
+                                        <option value="3">Etudiant(e)</option>
                                     </Select>
                                 </InputGroup>
                                 <FormErrorMessage>

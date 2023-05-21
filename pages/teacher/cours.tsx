@@ -18,7 +18,7 @@ const Cours = () => {
     const [description, setDescription] = useState("")
     const [file, setFile] = useState(null)
 
-    const {data}=useSWR("http://192.168.137.200:8000/api/teacher-courses/1",fetcher)
+    const {data}=useSWR("http://192.168.137.200:8000/api/teacher-courses/9",fetcher)
 
 
     
@@ -35,7 +35,7 @@ const Cours = () => {
             }
             formData.append('file', file)
             //@ts-ignore
-            formData.append('user',1)
+            formData.append('user',9)
             formData.append('description', description)
             //@ts-ignore
             formData.append('category',1)

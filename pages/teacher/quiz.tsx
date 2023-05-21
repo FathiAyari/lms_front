@@ -17,7 +17,7 @@ const Quiz = () => {
   const handleAddField = () => {
     setInputFields([...inputFields, { question: '', choices: ['', '', ''], answer: '' }]);
   };
-    const {data:cours}=useSWR("http://192.168.137.200:8000/api/teacher-courses/1",fetcher)
+    const {data:cours}=useSWR("http://192.168.137.200:8000/api/teacher-courses/9",fetcher)
     const options = cours?.map((item) => ({
     value: item.id,
     label: item.title,
