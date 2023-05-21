@@ -35,8 +35,10 @@ const options: NextAuthOptions = {
                         }
                     } else if (user.message == 'User does not exist') {
                         throw new Error("L'utilisateur n'existe pas") // Throw an error
-                    } else {
+                    } else if (user.message == 'Incorrect password') {
                         throw new Error('Mot de passe incorrecte') // Throw an error
+                    } else {
+                        throw new Error("Votre compte n'est pas activé")
                     }
                 } catch (error) {
                     console.log(error)
