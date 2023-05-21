@@ -57,11 +57,15 @@ const Home = () => {
                                 onClick={() => {
                                     if (session.user.role.name === 'admin')
                                         router.push('/admin/dashboard')
-                                    if (session.user.role.name === 'teacher')
+                                    else if (
+                                        session.user.role.name === 'teacher'
+                                    )
                                         router.push('/teacher/dashboard')
-                                    if (session.user.role.name === 'student')
+                                    else if (
+                                        session.user.role.name === 'student'
+                                    )
                                         router.push('/user/dashboard')
-                                    router.push('/')
+                                    else router.push('/')
                                 }}
                             >
                                 Get started

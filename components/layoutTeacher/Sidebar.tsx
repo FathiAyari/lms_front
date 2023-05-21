@@ -30,7 +30,6 @@ export default function Sidebar() {
     const router = useRouter()
     const { data: session, status } = useSession()
     const [navSize, changeNavSize] = useState('large')
-    console.log(session)
 
     useEffect(() => {
         if (status === 'unauthenticated') router.push('/')

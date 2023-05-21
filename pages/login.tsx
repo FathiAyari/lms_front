@@ -98,16 +98,14 @@ const Login = () => {
     }
 
     useEffect(() => {
-        console.log(session)
-        console.log(status)
         if (authLoading) return // Do nothing while loading
 
         if (status === 'authenticated') {
-            if (session?.user.role.name === 'teacher')
+            if (session?.user.role.name === 'teacher') {
                 router.push('/teacher/dashboard')
-            if (session?.user.role.name === 'admin')
+            } else if (session?.user.role.name === 'admin') {
                 router.push('/admin/dashboard')
-            router.push('/home')
+            } else router.push('/home')
         }
     }, [session, status])
     return (
