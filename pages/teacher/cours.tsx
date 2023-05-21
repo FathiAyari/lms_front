@@ -18,7 +18,7 @@ const Cours = () => {
     const [description, setDescription] = useState("")
     const [file, setFile] = useState(null)
 
-    const {data}=useSWR("http://192.168.137.200:8000/api/teacher-courses/1",fetcher)     
+    const {data}=useSWR("http://192.168.137.200:8000/api/teacher-courses/1",fetcher)
 
 
     

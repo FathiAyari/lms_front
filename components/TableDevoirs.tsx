@@ -1,16 +1,18 @@
 import { fetcher } from '@/lib/fetcher'
-import { Button, FormControl, FormLabel, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Stack, Td, Tr, useDisclosure } from '@chakra-ui/react'
+import { Button, FormControl, FormLabel, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Spinner, Stack, Td, Tr, useDisclosure } from '@chakra-ui/react'
 import React, { FC, useState } from 'react'
 import { FcViewDetails } from 'react-icons/fc'
 import { AiOutlineFileAdd } from 'react-icons/ai'
 
 import useSWR from 'swr'
+import { useRouter } from 'next/router'
 
 interface Props{
     item:any
 }
 
-const TableDevoirs:FC<Props> = ({item}) => {
+const TableDevoirs: FC<Props> = ({ item }) => {
+    const router=useRouter()
   const { data:cours } = useSWR(`http://192.168.137.200:8000/api/cours/${item?.course}`, fetcher)  
     const { isOpen, onOpen, onClose } = useDisclosure()
   const initialRef = React.useRef(null)
@@ -19,16 +21,18 @@ const TableDevoirs:FC<Props> = ({item}) => {
     const [categorie,setCategorie]=useState("")
     const [description, setDescription] = useState("")
     const [file, setFile] = useState(null)
+    const [loading, setLoading] = useState(false)
+
 
     const {data}=useSWR("http://192.168.137.200:8000/api/user_exams/1",fetcher)     
     const handleFileChange = (event:any) => {
         setFile(event.target.files[0])
     }
-    console.log(data)
-    console.log(file)
+   
   const handleSubmit = async () => {
       
-        try {
+      try {
+            setLoading(true)
             const formData = new FormData()
 
             if (!file) {
@@ -46,7 +50,8 @@ const TableDevoirs:FC<Props> = ({item}) => {
                     body: formData,
                 }
             )
-            console.log(response)
+          setLoading(false)
+onClose()
         } catch (error) {
             console.error('Error uploading file:', error)
         }
@@ -59,7 +64,7 @@ const TableDevoirs:FC<Props> = ({item}) => {
             <Td>{item.deadLine}</Td>
             <Td>
              <Stack direction='row' spacing={4}>
-  <Button leftIcon={<FcViewDetails />} colorScheme='pink' variant='outline'>
+  <Button leftIcon={<FcViewDetails />} colorScheme='pink' variant='outline' onClick={()=>router.push(`/user/devoirsDetails?devId=${item?.id}`)}>
     Details
   </Button>
   <Button leftIcon={<AiOutlineFileAdd />} colorScheme='pink' variant='solid' onClick={onOpen}>
@@ -90,8 +95,9 @@ Rondu
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={handleSubmit}>
-              Save
+            <Button colorScheme='blue' mr={3} onClick={handleSubmit} display={"flex"} flexDirection={"row"} gap={2}>
+                          Save
+                         {loading? <Spinner />:""}
             </Button>
             <Button onClick={onClose}>Cancel</Button>
           </ModalFooter>

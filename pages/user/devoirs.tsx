@@ -9,8 +9,6 @@ import useSWR from "swr";
 
 const AssignmentTable = () => {
     const {data}=useSWR("http://192.168.137.200:8000/api/user_exams/1",fetcher)     
- 
-    console.log(data)
   return (
       <Box p={16}><Heading textAlign={"center"} py={16}>Mes Devoirs</Heading><Table variant="striped" colorScheme="gray" bg={"white"}>
 
