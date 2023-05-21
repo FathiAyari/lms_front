@@ -1,6 +1,6 @@
-import { FC } from "react";
+import { FC, use, useEffect, useState } from "react";
 // Core viewer
-import { Worker, Viewer } from "@react-pdf-viewer/core";
+
 // Plugins
 import {
   defaultLayoutPlugin,
@@ -14,63 +14,30 @@ import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "@react-pdf-viewer/toolbar/lib/styles/index.css";
 import LayoutUser from "@/components/layoutUser";
 import { Box } from "@chakra-ui/react";
-import PDFReader from "@/components/PDFReader";
+import { useRouter } from "next/router";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetcher";
+import dynamic from 'next/dynamic';
+import PDFReader from "./PDFReader";
 
+const DynamicFileViewer = dynamic(() => import('./PDFReader'), { ssr: false })
 interface Props {
   url: string;
 }
 
-const pdf="http://192.168.137.200:8000/api/show-file/cour.pdf"
+
 
 const Details = () => {
-  const defaultLayoutPluginProps: DefaultLayoutPluginProps = {
-    sidebarTabs: () => [],
-    renderToolbar: (Toolbar: (props: ToolbarProps) => React.ReactElement) =>
-      Toolbar({
-        children: ({
-          CurrentPageInput,
-          EnterFullScreen,
-          GoToNextPage,
-          GoToPreviousPage,
-          NumberOfPages,
-          Zoom,
-          ZoomIn,
-          ZoomOut,
-        }) => (
-          <>
-            <div style={{ padding: "0px 2px" }}>
-              <ZoomOut />
-            </div>
-            <div style={{ padding: "0px 2px" }}>
-              <Zoom />
-            </div>
-            <div style={{ padding: "0px 2px" }}>
-              <ZoomIn />
-            </div>
-            <div style={{ padding: "0px 2px", marginLeft: "auto" }}>
-              <GoToPreviousPage />
-            </div>
-            <div className="flex gap-2 items-center w-20">
-              <div className="flex-1">
-                <CurrentPageInput />
-              </div>
-              <div>
-                / <NumberOfPages />
-              </div>
-            </div>
-            <div style={{ padding: "0px 2px" }}>
-              <GoToNextPage />
-            </div>
-            <div style={{ padding: "0px 2px", marginLeft: "auto" }}>
-              <EnterFullScreen />
-            </div>
-          </>
-        ),
-      }),
-  };
+  const router = useRouter()
+    const {data}=useSWR(`http://192.168.137.200:8000/api/cours/${parseInt(router?.query.courId as string)}`,fetcher)     
 
-  // Create new plugin instance
-  const defaultLayoutPluginInstance = defaultLayoutPlugin(defaultLayoutPluginProps);
+  console.log(data?.file)
+
+  const [isBrowser, setIsBrowser] = useState(false);
+
+  useEffect(() => {
+    setIsBrowser(true);
+  }, []);
 
   return (
     <Box
@@ -81,7 +48,9 @@ const Details = () => {
           w={"100%"}
           h={"100vh"}
     >
- <PDFReader pdfUrl={pdf} />
+<PDFReader url={""} />
+
+
       
     </Box>
   );

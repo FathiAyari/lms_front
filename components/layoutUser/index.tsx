@@ -1,9 +1,8 @@
-import { Box, HStack } from '@chakra-ui/react'
+import { Box} from '@chakra-ui/react'
 import React, { FC } from 'react'
-
-import { Flex, Text, IconButton } from '@chakra-ui/react'
-import { FiMenu } from 'react-icons/fi'
+import { Flex } from '@chakra-ui/react'
 import Sidebar from './Sidebar'
+
 interface Props {
     children: React.ReactNode
 }

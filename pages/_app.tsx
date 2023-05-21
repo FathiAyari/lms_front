@@ -22,14 +22,14 @@ const App: FC<CustomAppProps> = ({
         if (session?.user.role !== 1) router.push('/test')
     }, []) */
     return (
-        // <SessionProvider session={session}>
-        //     {' '}
+        <SessionProvider session={session}>
+
             <ChakraProvider>
                <Layout pageProps={pageProps}>
               <Component {...pageProps} />
             </Layout>
             </ChakraProvider>
-        // </SessionProvider>
+         </SessionProvider>
     )
 }
 

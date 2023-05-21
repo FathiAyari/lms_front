@@ -1,6 +1,7 @@
 import LayoutTeacher from '@/components/layoutTeacher'
 import { fetcher } from '@/lib/fetcher';
 import { Box, Button, FormControl, FormLabel, Heading, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Table, Tbody, Td, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react'
+import { format } from 'date-fns';
 import React, { useState } from 'react'
 import { BiPencil } from 'react-icons/bi';
 import { BsPlus } from 'react-icons/bs';
@@ -18,12 +19,14 @@ const Devoirs = () => {
     const [description, setDescription] = useState("")
     const [file, setFile] = useState(null)
 
-    const {data}=useSWR("http://192.168.137.200:8000/api/teacher-courses/1",fetcher)     
+    const {data}=useSWR("http://192.168.137.200:8000/api/user_exams/1",fetcher)     
     const handleFileChange = (event:any) => {
         setFile(event.target.files[0])
     }
     console.log(data)
-    const handleSubmit = async () => {
+    console.log(file)
+  const handleSubmit = async () => {
+      
         try {
             const formData = new FormData()
 
@@ -31,15 +34,16 @@ const Devoirs = () => {
                 console.error('No file selected')
                 return
             }
-            formData.append('file', file)
+            formData.append('exam', file)
             //@ts-ignore
             formData.append('user',1)
-            formData.append('description', description)
+          formData.append('course', 2 as any)
             //@ts-ignore
-            formData.append('category',1)
-            formData.append('title', titre)
+            formData.append('deadLine',format(new Date(),"yyyy-MM-dd"))
+            formData.append('description', "testt")
+            formData.append('title', "titre")
             const response = await fetch(
-                'http://192.168.137.200:8000/api/add-cours',
+                'http://192.168.137.200:8000/api/add_exam',
                 {
                     method: 'POST',
                     body: formData,

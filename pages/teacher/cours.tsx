@@ -1,6 +1,6 @@
 import LayoutTeacher from '@/components/layoutTeacher'
 import { fetcher } from '@/lib/fetcher';
-import { Box, Button, FormControl, FormLabel, Heading, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Table, Tbody, Td, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react'
+import { Box, Button, FormControl, FormLabel, Heading, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Select, Table, Tbody, Td, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { BiPencil } from 'react-icons/bi';
 import { BsPlus } from 'react-icons/bs';
@@ -18,7 +18,8 @@ const Cours = () => {
     const [description, setDescription] = useState("")
     const [file, setFile] = useState(null)
 
-    const {data}=useSWR("http://192.168.137.200:8000/api/teacher-courses/1",fetcher) 
+    const {data}=useSWR("http://192.168.137.200:8000/api/teacher-courses/1",fetcher)     
+
     console.log(data)
     
     const handleFileChange = (event:any) => {
@@ -51,6 +52,26 @@ const Cours = () => {
             console.error('Error uploading file:', error)
         }
     }
+  const handleDelete = async (id) => {
+
+      try {
+    const response = await fetch(
+        `http://192.168.137.200:8000/api/delete-course/${id}`,
+        {
+            method: 'DELETE',
+        }
+    );
+    await mutate("http://192.168.137.200:8000/api/teacher-courses/1")
+    onClose();
+} catch (error) {
+    console.error('Error deleting item:', error);
+}
+
+
+
+
+
+    }
   return (
       <Box p={16}><Heading textAlign={"center"} py={16}>Mes Cours</Heading>
          <Box display={"flex"} w={"100%"} alignItems={"end"} justifyContent={"end"} p={6}> <Button onClick={onOpen} rightIcon={<BsPlus />} colorScheme='blue' variant='outline'>
@@ -80,11 +101,23 @@ const Cours = () => {
                 icon={<BiPencil />}
                 variant="ghost"
                     />
-                    <IconButton
+                    
+              <Popover>
+  <PopoverTrigger>
+ <IconButton
                 aria-label="View assignment"
                 icon={<MdDeleteOutline />}
                 variant="ghost"
               />
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverArrow />
+    <PopoverCloseButton />
+    <PopoverHeader>Are you sure you want to delete!</PopoverHeader>
+    <PopoverBody><Button onClick={()=>handleDelete(item.id)}>Yes</Button></PopoverBody>
+  </PopoverContent>
+</Popover>
+             
             </Td>
           </Tr>
         ))}

@@ -1,8 +1,11 @@
+import CardQuiz from '@/components/CardCour/CardQuiz'
 import LayoutUser from '@/components/layoutUser'
+import { fetcher } from '@/lib/fetcher'
 import { Box, Card, CardBody, CardHeader, Heading, SimpleGrid, Stack, StackDivider,Tab,TabList,TabPanel,TabPanels,Tabs,Text, useColorModeValue} from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 
 import React, { useState } from 'react'
+import useSWR from 'swr'
 
 const Quiz = () => {
    const colors = useColorModeValue(
@@ -11,7 +14,9 @@ const Quiz = () => {
   )
   const [tabIndex, setTabIndex] = useState(0)
   const bg = colors[tabIndex]
-const  router =useRouter()
+  const router = useRouter()
+  const { data } = useSWR("http://192.168.137.200:8000/api/student_qcm/1", fetcher)  
+  console.log(data)
   return (
       
     <Box w={"100%"} p={6}>
@@ -24,293 +29,10 @@ const  router =useRouter()
   <TabPanels overflow={"auto"}>
     <TabPanel>
 <SimpleGrid  spacing={4} columns={[2, null, 4]} pb={16}>
-                    <Card onClick={()=>router.push("/user/quizDetail")}>
-  <CardHeader>
-    <Heading size='md'>Cour name</Heading>
-  </CardHeader>
-
-  <CardBody>
-    <Stack divider={<StackDivider />} spacing='4'>
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-       Quiz
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-         Quiz name
-        </Text>
-      </Box>
-     
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-Date
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-        89/9977/34 12:30
-        </Text>
-      </Box>
-    </Stack>
-  </CardBody>
-                    </Card><Card>
-  <CardHeader>
-    <Heading size='md'>Cour name</Heading>
-  </CardHeader>
-
-  <CardBody>
-    <Stack divider={<StackDivider />} spacing='4'>
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-       Quiz
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-         Quiz name
-        </Text>
-      </Box>
-     
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-Date
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-        89/9977/34 12:30
-        </Text>
-      </Box>
-    </Stack>
-  </CardBody>
-                    </Card><Card>
-  <CardHeader>
-    <Heading size='md'>Cour name</Heading>
-  </CardHeader>
-
-  <CardBody>
-    <Stack divider={<StackDivider />} spacing='4'>
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-       Quiz
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-         Quiz name
-        </Text>
-      </Box>
-     
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-Date
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-        89/9977/34 12:30
-        </Text>
-      </Box>
-    </Stack>
-  </CardBody>
-                    </Card><Card>
-  <CardHeader>
-    <Heading size='md'>Cour name</Heading>
-  </CardHeader>
-
-  <CardBody>
-    <Stack divider={<StackDivider />} spacing='4'>
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-       Quiz
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-         Quiz name
-        </Text>
-      </Box>
-     
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-Date
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-        89/9977/34 12:30
-        </Text>
-      </Box>
-    </Stack>
-  </CardBody>
-                    </Card><Card>
-  <CardHeader>
-    <Heading size='md'>Cour name</Heading>
-  </CardHeader>
-
-  <CardBody>
-    <Stack divider={<StackDivider />} spacing='4'>
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-       Quiz
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-         Quiz name
-        </Text>
-      </Box>
-     
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-Date
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-        89/9977/34 12:30
-        </Text>
-      </Box>
-    </Stack>
-  </CardBody>
-                    </Card><Card>
-  <CardHeader>
-    <Heading size='md'>Cour name</Heading>
-  </CardHeader>
-
-  <CardBody>
-    <Stack divider={<StackDivider />} spacing='4'>
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-       Quiz
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-         Quiz name
-        </Text>
-      </Box>
-     
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-Date
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-        89/9977/34 12:30
-        </Text>
-      </Box>
-    </Stack>
-  </CardBody>
-                    </Card><Card>
-  <CardHeader>
-    <Heading size='md'>Cour name</Heading>
-  </CardHeader>
-
-  <CardBody>
-    <Stack divider={<StackDivider />} spacing='4'>
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-       Quiz
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-         Quiz name
-        </Text>
-      </Box>
-     
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-Date
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-        89/9977/34 12:30
-        </Text>
-      </Box>
-    </Stack>
-  </CardBody>
-                    </Card><Card>
-  <CardHeader>
-    <Heading size='md'>Cour name</Heading>
-  </CardHeader>
-
-  <CardBody>
-    <Stack divider={<StackDivider />} spacing='4'>
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-       Quiz
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-         Quiz name
-        </Text>
-      </Box>
-     
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-Date
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-        89/9977/34 12:30
-        </Text>
-      </Box>
-    </Stack>
-  </CardBody>
-                    </Card><Card>
-  <CardHeader>
-    <Heading size='md'>Cour name</Heading>
-  </CardHeader>
-
-  <CardBody>
-    <Stack divider={<StackDivider />} spacing='4'>
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-       Quiz
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-         Quiz name
-        </Text>
-      </Box>
-     
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-Date
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-        89/9977/34 12:30
-        </Text>
-      </Box>
-    </Stack>
-  </CardBody>
-                    </Card><Card>
-  <CardHeader>
-    <Heading size='md'>Cour name</Heading>
-  </CardHeader>
-
-  <CardBody>
-    <Stack divider={<StackDivider />} spacing='4'>
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-       Quiz
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-         Quiz name
-        </Text>
-      </Box>
-     
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-Date
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-        89/9977/34 12:30
-        </Text>
-      </Box>
-    </Stack>
-  </CardBody>
-                    </Card><Card>
-  <CardHeader>
-    <Heading size='md'>Cour name</Heading>
-  </CardHeader>
-
-  <CardBody>
-    <Stack divider={<StackDivider />} spacing='4'>
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-       Quiz
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-         Quiz name
-        </Text>
-      </Box>
-     
-      <Box>
-        <Heading size='xs' textTransform='uppercase'>
-Date
-        </Heading>
-        <Text pt='2' fontSize='sm'>
-        89/9977/34 12:30
-        </Text>
-      </Box>
-    </Stack>
-  </CardBody>
-                    </Card>
+              {data?.map((item, key) =>
+              <CardQuiz item={item} key={key} subscribe={true}/>)
+              }
+              
                
                
                 </SimpleGrid>

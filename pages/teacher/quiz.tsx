@@ -1,7 +1,9 @@
 import LayoutTeacher from '@/components/layoutTeacher';
 import { Box, Heading, Input, Button, ButtonGroup, HStack } from '@chakra-ui/react';
+import { format } from 'date-fns';
 import { useState } from 'react';
 import Select from 'react-select';
+import { mutate } from 'swr';
 
 const options = [
   { value: 'option1', label: 'Option 1' },
@@ -62,6 +64,34 @@ const Quiz = () => {
   const handleSelectChange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
+
+  const handleAdd = async () => {
+
+    try {
+      const body = {
+        course: 1,
+        deadLine: format(new Date(), "yyyy-MM-dd"),
+        choices:inputFields
+        
+       }
+           console.log(body)
+            const response = await fetch(
+              "http://192.168.137.200:8000/api/add_qcm",
+                {
+                    method: 'POST',
+                  body: JSON.stringify(body),
+ headers: { 'Content-Type': 'application/json' },            
+                }
+            )
+
+  
+ 
+      
+
+        } catch (error) {
+            console.error('Error uploading file:', error)
+        }
+  }
 
   return (
     <Box w="100%" p={6}>
@@ -145,9 +175,9 @@ Remove Field
     </Button>
 
     <Button
-      type="submit"
+      type="button"
       colorScheme="green"
-
+onClick={handleAdd}
     >
       Submit
     </Button></HStack>
