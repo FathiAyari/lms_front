@@ -1,4 +1,4 @@
-import LayoutUser from '@/components/layoutUser'
+import LayoutTeacher from '@/components/layoutTeacher'
 import {
     Heading,
     Avatar,
@@ -83,4 +83,4 @@ export default function Profile() {
     )
 }
 
-Profile.Layout = LayoutUser
+Profile.Layout = LayoutTeacher
