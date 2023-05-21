@@ -1,3 +1,4 @@
+import LayoutTeacher from '@/components/layoutTeacher'
 import LayoutUser from '@/components/layoutUser'
 import AddMessage from '@/components/message/AddMessage'
 import MessageItem from '@/components/message/MessageItem'
@@ -69,4 +70,4 @@ const ChatBox = () => {
 }
 
 export default ChatBox
-ChatBox.Layout = LayoutUser
+ChatBox.Layout = LayoutTeacher
