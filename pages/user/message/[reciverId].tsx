@@ -27,7 +27,7 @@ const ChatBox = () => {
                             <div className="flex flex-col h-full overflow-x-auto mb-4">
                                 <div className="flex flex-col h-full">
                                     <div className="grid grid-cols-12 gap-y-2">
-                                        {chats?.map((e,key) => (
+                                        {chats?.map((e, key) => (
                                             <MessageItem
                                                 key={key}
                                                 user={e.sender}
@@ -50,9 +50,11 @@ const ChatBox = () => {
                                 <span className="font-bold">List de Prof</span>
                             </div>
                             <div className="flex flex-col space-y-1 mt-4 -mx-2 h-42 overflow-y-auto">
-                                {teachers?.map((e,key) => (
-                                    <TeacherButton teacher={e} key={key} />
-                                ))}
+                                {teachers
+                                    ?.filter((e) => e.id !== senderId)
+                                    .map((e, key) => (
+                                        <TeacherButton teacher={e} key={key} />
+                                    ))}
                             </div>
                         </div>
                     </div>
