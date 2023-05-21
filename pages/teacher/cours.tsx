@@ -77,7 +77,7 @@ const Cours = () => {
 
             formData.append('description', description)
             //@ts-ignore
-            formData.append('category', 1)
+            formData.append('category', categorie)
             formData.append('title', titre)
             const response = await fetch(
                 'http://192.168.137.200:8000/api/add-cours',
@@ -203,7 +203,10 @@ const Cours = () => {
 
                         <FormControl mt={4}>
                             <FormLabel>Catégorie</FormLabel>
-                            <Select placeholder="Select Categorie">
+                            <Select
+                                placeholder="Select Categorie"
+                                onChange={(e) => setCategorie(e.target.value)}
+                            >
                                 {categories?.map((category, index) => (
                                     <option key={index} value={category.id}>
                                         {category.name}
