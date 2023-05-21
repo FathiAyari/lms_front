@@ -11,11 +11,12 @@ const options: NextAuthOptions = {
                 email: { label: 'email', type: 'text' },
                 password: { label: 'Password', type: 'password' },
             },
+            //@ts-ignore
             async authorize(credentials, req) {
                 try {
                     // Fetch data from API and validate credentials
                     const response = await fetch(
-                        'http://127.0.0.1:8000/api/login',
+                        'http://192.168.137.200:8000/api/login',
                         {
                             method: 'POST',
                             body: JSON.stringify(credentials),
@@ -24,6 +25,7 @@ const options: NextAuthOptions = {
                     )
 
                     const user = await response.json()
+
                     if (user.full_name !== undefined) {
                         return {
                             id: user.id,
@@ -37,6 +39,7 @@ const options: NextAuthOptions = {
                         throw new Error('Mot de passe incorrecte') // Throw an error
                     }
                 } catch (error) {
+                    console.log(error)
                     throw Error(error)
                 }
             },

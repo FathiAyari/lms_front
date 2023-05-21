@@ -79,29 +79,34 @@ const Login = () => {
 
     const onSubmit = async (cridentials: SignInOptions) => {
         setLoading(!loading)
-        console.log('message:', cridentials)
-        signIn('credentials', { ...cridentials, redirect: false }).then(
-            async (e) => {
-                if (e?.error !== undefined) {
-                    setAuthError(e?.error?.split(':')[1])
-                    setTimeout(() => {
-                        setAuthError('')
-                    }, 3000)
-                }
-                setLoading(loading)
-                console.log(e?.error?.split(':')[1])
-            }
-        )
+        const response = await signIn('credentials', {
+            ...cridentials,
+            redirect: false,
+        })
+
+        if (response?.error) {
+            setAuthError(response?.error?.split(':')[1])
+            setTimeout(() => {
+                setAuthError('')
+            }, 3000)
+        }
+        setLoading(loading)
     }
     const handleShowPassword = () => {
         setShowPassword(!showPassword)
     }
 
     useEffect(() => {
+        console.log(session)
+        console.log(status)
         if (authLoading) return // Do nothing while loading
 
         if (status === 'authenticated') {
-            if (session?.user.role === 1) router.push('/admin/dashboard')
+            if (session?.user.role.name === 'teacher')
+                router.push('/teacher/dashboard')
+            if (session?.user.role.name === 'admin')
+                router.push('/admin/dashboard')
+            router.push('/home')
         }
     }, [session, status])
     return (

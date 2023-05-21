@@ -3,12 +3,14 @@ import AddMessage from '@/components/message/AddMessage'
 import MessageItem from '@/components/message/MessageItem'
 import TeacherButton from '@/components/message/TeacherButton'
 import { fetcher } from '@/lib/fetcher'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 
 const ChatBox = () => {
     const router = useRouter()
-    const senderId = 3
+    const { data: session } = useSession()
+    const senderId = session?.user?.id
     const reciverId = router.query.reciverId
     const { data: chats } = useSWR(
         `http://192.168.137.200:8000/api/get_chats/${senderId}/${reciverId}`,
