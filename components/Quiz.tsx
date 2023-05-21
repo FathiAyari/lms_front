@@ -50,7 +50,7 @@ const Quiz = () => {
       const scorePercentage = (correctAnswers / totalQuestions) * 100;
       console.log(scorePercentage)
       const body = {
-  qcm:parseInt(router?.query?.quizId as string),user: 1 ,note:`${scorePercentage}`
+  qcm:parseInt(router?.query?.quizId as string),user: 9 ,note:`${scorePercentage}`
 }
             const response = await fetch(
 "http://192.168.137.200:8000/api/add_qcm_result",
