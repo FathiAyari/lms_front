@@ -32,6 +32,7 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { SignInOptions, signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 const avatars = [
     {
         name: 'Ryan Florence',
@@ -311,6 +312,9 @@ const Login = () => {
                         >
                             {loading ? 'Connexion...' : 'Connexion'}
                         </Button>
+                        <Box w="full" textAlign="center">
+                            <Link href="/register">Cree un compte</Link>
+                        </Box>
                     </Box>
                 </Stack>
             </Container>

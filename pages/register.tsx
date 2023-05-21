@@ -25,6 +25,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useRouter } from 'next/router'
 const avatars = [
     {
         name: 'Ryan Florence',
@@ -49,6 +50,7 @@ const avatars = [
 ]
 
 export default function Register() {
+    const router = useRouter()
     const schema = yup.object().shape({
         email: yup.string().required("l'email est un champ obligatoire"),
         address: yup.string().required("l'addresse est un champ obligatoire"),
@@ -69,18 +71,16 @@ export default function Register() {
     })
     console.log(errors)
     const onSubmit = async (data) => {
-
         try {
-
             const response = await fetch(
                 'http://192.168.137.200:8000/api/register',
                 {
                     method: 'POST',
-     body: JSON.stringify(data),
- headers: { 'Content-Type': 'application/json' },     
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'application/json' },
                 }
             )
-
+            router.push('/')
         } catch (error) {
             console.error('Error uploading file:', error)
         }
@@ -195,10 +195,10 @@ export default function Register() {
                             color={'gray.500'}
                             fontSize={{ base: 'sm', sm: 'md' }}
                         >
-                            LMS rend la conception et la création d&apos;expériences
-                            de cours accessibles à tous.LMS rend la conception
-                            et la création d&apos;expériences de cours accessibles à
-                            tous.
+                            LMS rend la conception et la création
+                            d&apos;expériences de cours accessibles à tous.LMS
+                            rend la conception et la création d&apos;expériences
+                            de cours accessibles à tous.
                         </Text>
                     </Stack>
                     <Box as={'form'} onSubmit={handleSubmit(onSubmit)}>
@@ -286,7 +286,7 @@ export default function Register() {
                                             color: 'gray.500',
                                         }}
                                         placeholder="Selectioner le type"
-                                        defaultValue={""}
+                                        defaultValue={''}
                                     >
                                         <option selected value="2">
                                             Enseignant(e)

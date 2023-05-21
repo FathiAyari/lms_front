@@ -147,8 +147,8 @@ export default function Sidebar() {
 
                         <MenuItem
                             gap={2}
-                            onClick={() => {
-                                signOut({ redirect: false })
+                            onClick={async () => {
+                                await signOut({ redirect: false })
                                 router.push('/')
                             }}
                         >

@@ -15,9 +15,11 @@ import Footer from '@/components/Footer'
 import Statistic from '@/components/Statistic'
 import Testimonial from '@/components/Testimonial'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 
 const Home = () => {
     const router = useRouter()
+    const { data: session } = useSession()
     return (
         <Box w={'100%'}>
             <VStack>
@@ -52,7 +54,15 @@ const Home = () => {
                                 colorScheme={'orange'}
                                 bg={'#ec63a6'}
                                 _hover={{ bg: 'pink.300' }}
-                                onClick={() => router.push('/user/dashboard')}
+                                onClick={() => {
+                                    if (session.user.role.name === 'admin')
+                                        router.push('/admin/dashboard')
+                                    if (session.user.role.name === 'teacher')
+                                        router.push('/teacher/dashboard')
+                                    if (session.user.role.name === 'student')
+                                        router.push('/user/dashboard')
+                                    router.push('/')
+                                }}
                             >
                                 Get started
                             </Button>
