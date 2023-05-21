@@ -57,6 +57,7 @@ const options: NextAuthOptions = {
             return session
         },
     },
+    secret: process.env.NEXTAUTH_SECRET,
     jwt: {
         // A secret to use for key generation. Defaults to the top-level secret.
         maxAge: 60 * 60 * 24 * 30,
