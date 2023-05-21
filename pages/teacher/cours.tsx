@@ -20,7 +20,7 @@ const Cours = () => {
 
     const {data}=useSWR("http://192.168.137.200:8000/api/teacher-courses/1",fetcher)     
 
-    console.log(data)
+
     
     const handleFileChange = (event:any) => {
         setFile(event.target.files[0])
@@ -47,7 +47,7 @@ const Cours = () => {
                     body: formData,
                 }
             )
-            console.log(response)
+onClose()
         } catch (error) {
             console.error('Error uploading file:', error)
         }

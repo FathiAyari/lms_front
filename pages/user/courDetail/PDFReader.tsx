@@ -77,13 +77,7 @@ const PDFReader: FC<Props> = ({ url }) => {
       }}
     >
       <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.3.122/build/pdf.worker.min.js`}>
-        <Viewer
-          fileUrl={url}
-          plugins={[
-            // @ts-ignore
-            defaultLayoutPluginInstance,
-          ]}
-        />
+          <Viewer fileUrl={url}/>
       </Worker>
     </div>
   );

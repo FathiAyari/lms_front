@@ -8,7 +8,7 @@ import useSWR from 'swr'
 
 const ChatBox = () => {
     const router = useRouter()
-    const senderId = 2
+    const senderId = 3
     const reciverId = router.query.reciverId
     const { data: chats } = useSWR(
         `http://192.168.137.200:8000/api/get_chats/${senderId}/${reciverId}`,
@@ -27,8 +27,9 @@ const ChatBox = () => {
                             <div className="flex flex-col h-full overflow-x-auto mb-4">
                                 <div className="flex flex-col h-full">
                                     <div className="grid grid-cols-12 gap-y-2">
-                                        {chats?.map((e) => (
+                                        {chats?.map((e,key) => (
                                             <MessageItem
+                                                key={key}
                                                 user={e.sender}
                                                 isMe={e.sender.id === senderId}
                                                 message={e.message}
@@ -49,8 +50,8 @@ const ChatBox = () => {
                                 <span className="font-bold">List de Prof</span>
                             </div>
                             <div className="flex flex-col space-y-1 mt-4 -mx-2 h-42 overflow-y-auto">
-                                {teachers?.map((e) => (
-                                    <TeacherButton teacher={e} />
+                                {teachers?.map((e,key) => (
+                                    <TeacherButton teacher={e} key={key} />
                                 ))}
                             </div>
                         </div>

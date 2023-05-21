@@ -37,7 +37,7 @@ const Devoirs = () => {
             formData.append('exam', file)
             //@ts-ignore
             formData.append('user',1)
-          formData.append('course', 2 as any)
+          formData.append('course', 3 as any)
             //@ts-ignore
             formData.append('deadLine',format(new Date(),"yyyy-MM-dd"))
             formData.append('description', "testt")

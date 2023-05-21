@@ -67,8 +67,22 @@ export default function Register() {
     } = useForm({
         resolver: yupResolver(schema),
     })
-    const onSubmit = (data) => {
-        console.log(data)
+    const onSubmit = async (data) => {
+
+        try {
+
+            const response = await fetch(
+                'http://192.168.137.200:8000/api/register',
+                {
+                    method: 'POST',
+     body: JSON.stringify(data),
+ headers: { 'Content-Type': 'application/json' },     
+                }
+            )
+
+        } catch (error) {
+            console.error('Error uploading file:', error)
+        }
     }
     const handleShowPassword = () => {
         setShowPassword(!showPassword)
@@ -263,7 +277,7 @@ export default function Register() {
                             <FormControl isRequired>
                                 <InputGroup>
                                     <Select
-                                        {...register('role_id')}
+                                        {...register('role')}
                                         bg={'gray.100'}
                                         border={0}
                                         color={'gray.500'}
