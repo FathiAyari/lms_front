@@ -24,7 +24,7 @@ const TableDevoirs: FC<Props> = ({ item }) => {
     const [loading, setLoading] = useState(false)
 
 
-    const {data}=useSWR("http://192.168.137.200:8000/api/user_exams/1",fetcher)     
+    const {data}=useSWR("http://192.168.137.200:8000/api/user_exams/3",fetcher)     
     const handleFileChange = (event:any) => {
         setFile(event.target.files[0])
     }
@@ -41,8 +41,8 @@ const TableDevoirs: FC<Props> = ({ item }) => {
             }
             formData.append('report', file)
             //@ts-ignore
-            formData.append('user',1)
-          formData.append('exam', 1 as any)
+            formData.append('user',9)
+          formData.append('exam', 3 as any)
             const response = await fetch(
                 'http://192.168.137.200:8000/api/add_exam_result',
                 {

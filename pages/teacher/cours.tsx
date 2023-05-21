@@ -1,36 +1,7 @@
 import LayoutTeacher from '@/components/layoutTeacher'
-import { fetcher } from '@/lib/fetcher'
-import {
-    Box,
-    Button,
-    FormControl,
-    FormLabel,
-    Heading,
-    IconButton,
-    Input,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay,
-    Popover,
-    PopoverArrow,
-    PopoverBody,
-    PopoverCloseButton,
-    PopoverContent,
-    PopoverHeader,
-    PopoverTrigger,
-    Select,
-    Table,
-    Tbody,
-    Td,
-    Th,
-    Thead,
-    Tr,
-    useDisclosure,
-} from '@chakra-ui/react'
+import { fetcher } from '@/lib/fetcher';
+import { Box, Button, FormControl, FormLabel, Heading, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Select, Table, Tbody, Td, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react'
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react'
 import { BiPencil } from 'react-icons/bi'
 import { BsPlus } from 'react-icons/bs'
@@ -38,22 +9,25 @@ import { MdDeleteOutline } from 'react-icons/md'
 import useSWR, { mutate } from 'swr'
 
 const Cours = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const initialRef = React.useRef(null)
+const {data:session}=useSession()
+
+
+      const { isOpen, onOpen, onClose } = useDisclosure()
+  const initialRef = React.useRef(null)
+
     const finalRef = React.useRef(null)
     const [titre, setTitre] = useState('')
     const [categorie, setCategorie] = useState('')
     const [description, setDescription] = useState('')
     const [file, setFile] = useState(null)
 
-    const { data } = useSWR(
-        'http://192.168.137.200:8000/api/teacher-courses/9',
-        fetcher
-    )
+
     const { data: categories } = useSWR(
         'http://192.168.137.200:8000/api/get_categories',
         fetcher
     )
+    const {data ,mutate}=useSWR(`http://192.168.137.200:8000/api/teacher-courses/${session?.user.id}`,fetcher)
+
 
     const handleFileChange = (event: any) => {
         setFile(event.target.files[0])
@@ -68,7 +42,9 @@ const Cours = () => {
             }
             formData.append('file', file)
             //@ts-ignore
-            formData.append('user', 9)
+
+            formData.append('user',session?.user.id)
+
             formData.append('description', description)
             //@ts-ignore
             formData.append('category', 1)
@@ -98,6 +74,13 @@ const Cours = () => {
         } catch (error) {
             console.error('Error deleting item:', error)
         }
+
+    );
+    await mutate()
+    onClose();
+} catch (error) {
+    console.error('Error deleting item:', error);
+}
     }
     return (
         <Box p={16}>
