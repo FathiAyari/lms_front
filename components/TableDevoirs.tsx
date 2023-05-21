@@ -22,9 +22,7 @@ const TableDevoirs: FC<Props> = ({ item }) => {
     const [description, setDescription] = useState("")
     const [file, setFile] = useState(null)
     const [loading, setLoading] = useState(false)
-
-
-    const {data}=useSWR("http://192.168.137.200:8000/api/user_exams/3",fetcher)     
+  
     const handleFileChange = (event:any) => {
         setFile(event.target.files[0])
     }

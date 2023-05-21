@@ -22,6 +22,7 @@ import {
     CardFooter,
 } from '@chakra-ui/react'
 import { format } from 'date-fns'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React, { FC } from 'react'
 import { BsFolderMinus, BsNodeMinus, BsPlus } from 'react-icons/bs'
@@ -35,6 +36,8 @@ interface Props {
 
 const CardCour: FC<Props> = ({ item, subscribe }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
+const {data:session}=useSession()
+    
     const handleClick = async () => {
         const url = subscribe
             ? 'http://192.168.137.200:8000/api/unsubscribe'
@@ -42,13 +45,13 @@ const CardCour: FC<Props> = ({ item, subscribe }) => {
         try {
             const response = await fetch(url, {
                 method: 'PUT',
-                body: JSON.stringify({ cours_id: item?.id, user_id: 1 }),
+                body: JSON.stringify({ cours_id: item?.id, user_id: session?.user.id }),
                 headers: { 'Content-Type': 'application/json' },
             })
             if (subscribe) {
-                await mutate('http://192.168.137.200:8000/api/my-courses/1')
+                await mutate(`http://192.168.137.200:8000/api/my-courses/${session?.user.id}`)
             } else {
-                await mutate('http://192.168.137.200:8000/api/courses/1')
+                await mutate(`http://192.168.137.200:8000/api/courses/${session?.user.id}`)
             }
             onClose()
         } catch (error) {

@@ -2,6 +2,7 @@ import LayoutTeacher from '@/components/layoutTeacher'
 import { fetcher } from '@/lib/fetcher';
 import { Box, Button, FormControl, FormLabel, Heading, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Table, Tbody, Td, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react'
 import { format } from 'date-fns';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react'
 import { BiBullseye, BiPencil } from 'react-icons/bi';
@@ -13,6 +14,9 @@ import useSWR, { mutate } from 'swr'
 
 
 const Devoirs = () => {
+
+const {data:session}=useSession()
+
   const router =useRouter()
       const { isOpen, onOpen, onClose } = useDisclosure()
   const initialRef = React.useRef(null)
@@ -22,12 +26,11 @@ const Devoirs = () => {
     const [description, setDescription] = useState("")
     const [file, setFile] = useState(null)
 
-    const {data}=useSWR("http://192.168.137.200:8000/api/user_exams/1",fetcher)     
+    const {data}=useSWR(`http://192.168.137.200:8000/api/user_exams/${session?.user.id}`,fetcher)     
     const handleFileChange = (event:any) => {
         setFile(event.target.files[0])
     }
-    console.log(data)
-    console.log(file)
+  
   const handleSubmit = async () => {
       
         try {
@@ -39,7 +42,7 @@ const Devoirs = () => {
             }
             formData.append('exam', file)
             //@ts-ignore
-            formData.append('user',9)
+            formData.append('user',session?.user.id)
           formData.append('course', 5 as any)
             //@ts-ignore
             formData.append('deadLine',format(new Date(),"yyyy-MM-dd"))

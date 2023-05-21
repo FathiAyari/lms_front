@@ -1,4 +1,5 @@
 import LayoutTeacher from '@/components/layoutTeacher';
+import { fetcher } from '@/lib/fetcher';
 import {
   Box,
   chakra,
@@ -9,8 +10,10 @@ import {
   StatNumber,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { useSession } from 'next-auth/react';
 import { ReactNode } from 'react';
 import { FcBriefcase, FcCollaboration, FcDiploma2, FcPuzzle } from 'react-icons/fc';
+import useSWR from 'swr';
 
 
 interface StatsCardProps {
@@ -20,6 +23,7 @@ interface StatsCardProps {
 }
 function StatsCard(props: StatsCardProps) {
   const { title, stat, icon } = props;
+
   return (
     <Stat
       px={{ base: 2, md: 4 }}
@@ -49,6 +53,10 @@ function StatsCard(props: StatsCardProps) {
 }
 
 export default function Dashboard() {
+  const {data:session}=useSession()
+  const { data: cours } = useSWR(`http://192.168.137.200:8000/api/teacher-courses/${session?.user.id}`, fetcher)
+ const {data:devoirs}=useSWR(`http://192.168.137.200:8000/api/user_exams/${session?.user.id}`,fetcher)   
+  
   return (
     <Box pt={5} px={{ base: 2, sm: 12, md: 17 }}>
       <chakra.h1
@@ -59,26 +67,22 @@ export default function Dashboard() {
         Our company is expanding, you could be too.
       </chakra.h1>
       <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 5, lg: 8 }}>
-        <StatsCard
-          title={'Etudient'}
-          stat={'25'}
-          icon={<FcCollaboration size={'3em'} />}
-        />
+     
         <StatsCard
           title={'Cours'}
-          stat={'30'}
+          stat={cours?.length}
           icon={<FcBriefcase size={'3em'} />}
         />
         <StatsCard
           title={'Devoirs'}
-          stat={'7'}
+          stat={devoirs?.length}
           icon={<FcDiploma2 size={'3em'} />}
               />
-               <StatsCard
+               {/* <StatsCard
           title={'Quiz'}
           stat={'100'}
           icon={<FcPuzzle size={'3em'} />}
-        />
+        /> */}
       </SimpleGrid>
     </Box>
   );

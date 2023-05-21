@@ -7,24 +7,14 @@ import LayoutUser from '@/components/layoutUser'
 import { fetcher } from '@/lib/fetcher'
 import useSWR, { mutate } from 'swr'
 import CardCour from '@/components/CardCour'
+import { useSession } from 'next-auth/react'
 
 
 const UserDashboard = () => {
-    // const { data: session, status } = useSession()
-    // const loading = status === 'loading'
-    // useEffect(() => {
-    //     if (loading) return // Do nothing while loading
+     const { data: session, status } = useSession()
+  
 
-    //     if (status === 'authenticated') {
-    //         if (session?.user.role !== 1) {
-    //             router.push('/login')
-    //         }
-    //     } else {
-    //         router.push('/login')
-    //     }
-    // }, [session, status])
-
-  const { data } = useSWR("http://192.168.137.200:8000/api/courses/1", fetcher) 
+  const { data } = useSWR(`http://192.168.137.200:8000/api/courses/${session?.user.id}`, fetcher) 
 
   
 
