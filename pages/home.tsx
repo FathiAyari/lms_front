@@ -60,7 +60,7 @@ const Home = () => {
                                     else if (
                                         session.user.role.name === 'teacher'
                                     )
-                                        router.push('/teacher/dashboard')
+                                        router.push('/teacher/home')
                                     else if (
                                         session.user.role.name === 'student'
                                     )

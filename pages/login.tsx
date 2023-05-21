@@ -102,7 +102,7 @@ const Login = () => {
 
         if (status === 'authenticated') {
             if (session?.user.role.name === 'teacher') {
-                router.push('/teacher/dashboard')
+                router.push('/teacher/home')
             } else if (session?.user.role.name === 'admin') {
                 router.push('/admin/dashboard')
             } else router.push('/home')
