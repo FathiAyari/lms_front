@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { mutate } from 'swr'
 
-const AddMessage = ({ senderId, reciverId }) => {
+const AddMessage = ({ senderId, reciverId }: any) => {
     const [message, setMessage] = useState<string>()
     const [loading, setLoading] = useState<boolean>(false)
 
@@ -38,7 +38,7 @@ const AddMessage = ({ senderId, reciverId }) => {
             </div>
             <div className="ml-4">
                 <button
-                    disabled={loading}
+                    disabled={loading || !reciverId}
                     className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
                     onClick={onSubmit}
                 >
