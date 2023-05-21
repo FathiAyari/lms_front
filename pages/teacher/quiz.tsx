@@ -1,23 +1,27 @@
 import LayoutTeacher from '@/components/layoutTeacher';
-import { Box, Heading, Input, Button, ButtonGroup, HStack } from '@chakra-ui/react';
+import { fetcher } from '@/lib/fetcher';
+import { Box, Heading, Input, Button, ButtonGroup, HStack, Spinner, Alert, AlertIcon } from '@chakra-ui/react';
 import { format } from 'date-fns';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Select from 'react-select';
-import { mutate } from 'swr';
+import useSWR, { mutate } from 'swr';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const options = [
-  { value: 'option1', label: 'Option 1' },
-  { value: 'option2', label: 'Option 2' },
-  { value: 'option3', label: 'Option 3' }
-];
 
 const Quiz = () => {
-  const [inputFields, setInputFields] = useState([]);
+ const [inputFields, setInputFields] = useState([]);
+  const [courId, setCourId] = useState('');
+    const [loading, setLoading] = useState(false)
 
   const handleAddField = () => {
     setInputFields([...inputFields, { question: '', choices: ['', '', ''], answer: '' }]);
   };
-
+    const {data:cours}=useSWR("http://192.168.137.200:8000/api/teacher-courses/1",fetcher)
+    const options = cours?.map((item) => ({
+    value: item.id,
+    label: item.title,
+  }));
   const handleChange = (index, field, event) => {
     const values = [...inputFields];
     if (field === 'question') {
@@ -59,17 +63,19 @@ const Quiz = () => {
     event.preventDefault();
     console.log(inputFields); // You can handle the form submission logic here
   };
-     const [selectedOption, setSelectedOption] = useState(null);
+
 
   const handleSelectChange = (selectedOption) => {
-    setSelectedOption(selectedOption);
+    setCourId(selectedOption);
   };
 
   const handleAdd = async () => {
 
     try {
+      setLoading(true)
       const body = {
-        course: 1,
+        //@ts-ignore
+        course: parseInt(courId.value) ,
         deadLine: format(new Date(), "yyyy-MM-dd"),
         choices:inputFields
         
@@ -83,11 +89,33 @@ const Quiz = () => {
  headers: { 'Content-Type': 'application/json' },            
                 }
             )
+      setLoading(false)
+       if (response.ok) {
+      toast.success('Form submitted successfully!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000, // Adjust the duration as needed
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
 
-  
- 
+      // Clear the form or perform other actions
+
+    } else {
+      // Handle error case
+      toast.error('Form submission failed!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000, // Adjust the duration as needed
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
       
-
         } catch (error) {
             console.error('Error uploading file:', error)
         }
@@ -100,7 +128,7 @@ const Quiz = () => {
           </Heading>
            <Select
         options={options}
-        value={selectedOption}
+        value={courId}
         onChange={handleSelectChange}
         isClearable={true}
               placeholder="Select an option"
@@ -179,9 +207,11 @@ Remove Field
       colorScheme="green"
 onClick={handleAdd}
     >
-      Submit
+            Submit
+            {loading? <Spinner />:""}
     </Button></HStack>
-  </form>
+      </form>
+       <ToastContainer />
 </Box>
 );
 };

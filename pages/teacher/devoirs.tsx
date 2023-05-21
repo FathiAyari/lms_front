@@ -2,15 +2,18 @@ import LayoutTeacher from '@/components/layoutTeacher'
 import { fetcher } from '@/lib/fetcher';
 import { Box, Button, FormControl, FormLabel, Heading, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Table, Tbody, Td, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react'
 import { format } from 'date-fns';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react'
-import { BiPencil } from 'react-icons/bi';
+import { BiBullseye, BiPencil } from 'react-icons/bi';
 import { BsPlus } from 'react-icons/bs';
 import { MdDeleteOutline } from 'react-icons/md';
+import { TbListDetails } from 'react-icons/tb';
 import useSWR, { mutate } from 'swr'
 
 
 
 const Devoirs = () => {
+  const router =useRouter()
       const { isOpen, onOpen, onClose } = useDisclosure()
   const initialRef = React.useRef(null)
     const finalRef = React.useRef(null)
@@ -80,8 +83,9 @@ const Devoirs = () => {
             <Td>
               <IconButton
                 aria-label="View assignment"
-                icon={<BiPencil />}
+                icon={<TbListDetails />}
                 variant="ghost"
+                onClick={()=>router.push(`/teacher/rondu?devId=${item?.id}`)}
                     />
                     <IconButton
                 aria-label="View assignment"
