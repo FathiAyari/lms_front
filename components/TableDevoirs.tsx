@@ -22,6 +22,7 @@ import {
 import React, { FC, useState } from 'react'
 import { FcViewDetails } from 'react-icons/fc'
 import { AiOutlineFileAdd } from 'react-icons/ai'
+import { useSession } from 'next-auth/react'
 
 import useSWR from 'swr'
 import { useRouter } from 'next/router'
@@ -31,6 +32,7 @@ interface Props {
 }
 
 const TableDevoirs: FC<Props> = ({ item }) => {
+    const { data: session } = useSession()
     const router = useRouter()
     const { data: cours } = useSWR(
         process.env.NEXT_PUBLIC_BACK_URL + `/api/cours/${item?.course}`,
@@ -49,7 +51,7 @@ const TableDevoirs: FC<Props> = ({ item }) => {
         setFile(event.target.files[0])
     }
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (id) => {
         try {
             setLoading(true)
             const formData = new FormData()
@@ -60,8 +62,8 @@ const TableDevoirs: FC<Props> = ({ item }) => {
             }
             formData.append('report', file)
             //@ts-ignore
-            formData.append('user', 9)
-            formData.append('exam', 3 as any)
+            formData.append('user', session.user.id)
+            formData.append('exam', item.id)
             const response = await fetch(
                 process.env.NEXT_PUBLIC_BACK_URL + '/api/add_exam_result',
                 {

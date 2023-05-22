@@ -14,8 +14,10 @@ import {
 import useSWR from 'swr'
 import { fetcher } from '@/lib/fetcher'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 
 const Quiz = () => {
+    const { data: session } = useSession()
     const [answers, setAnswers] = useState([])
 
     const router = useRouter()
@@ -48,10 +50,10 @@ const Quiz = () => {
             }
 
             const scorePercentage = (correctAnswers / totalQuestions) * 100
-            console.log(scorePercentage)
+
             const body = {
                 qcm: parseInt(router?.query?.quizId as string),
-                user: 9,
+                user: session.user.id,
                 note: `${scorePercentage}`,
             }
             const response = await fetch(
@@ -62,6 +64,7 @@ const Quiz = () => {
                     headers: { 'Content-Type': 'application/json' },
                 }
             )
+            router.push('/user/quiz')
             console.log('Score Percentage:', response)
         } catch (error) {
             console.error('Error uploading file:', error)

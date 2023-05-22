@@ -21,7 +21,7 @@ const AssignmentTable = () => {
 
     const { data } = useSWR(
         process.env.NEXT_PUBLIC_BACK_URL +
-            `/api/user_exams/${session?.user.id}`,
+            `/api/student_exams/${session?.user.id}`,
         fetcher
     )
     console.log(data)
