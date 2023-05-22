@@ -20,12 +20,21 @@ import {
     ModalOverlay,
     useDisclosure,
     CardFooter,
+    ButtonGroup,
+    FormControl,
+    FormLabel,
+    Input,
+    RadioGroup,
+    Radio,
+    Img,
+    Select
 } from '@chakra-ui/react'
 import { format } from 'date-fns'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import React, { FC } from 'react'
-import { BsFolderMinus, BsNodeMinus, BsPlus } from 'react-icons/bs'
+import React, { FC, useState } from 'react'
+import { BsFillCreditCardFill, BsFolderMinus, BsNodeMinus, BsPlus } from 'react-icons/bs'
+import Placeholder from 'react-select/dist/declarations/src/components/Placeholder'
 import { json } from 'stream/consumers'
 import { mutate } from 'swr'
 
@@ -36,37 +45,46 @@ interface Props {
 
 const CardCour: FC<Props> = ({ item, subscribe }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const { data: session } = useSession()
+const {data:session}=useSession()
+    const [step, setStep] = useState(1);
+    const [paymentMethod, setPaymentMethod] = useState('');
+  const [paymentDetails, setPaymentDetails] = useState('');
 
+  const handleNextStep = () => {
+    setStep(step + 1);
+  };
+
+  const handlePrevStep = () => {
+    setStep(step - 1);
+  };
     const handleClick = async () => {
         const url = subscribe
-            ? process.env.NEXT_PUBLIC_BACK_URL + '/api/unsubscribe'
-            : process.env.NEXT_PUBLIC_BACK_URL + '/api/subscribe'
+            ? 'http://192.168.137.200:8000/api/unsubscribe'
+            : 'http://192.168.137.200:8000/api/subscribe'
         try {
             const response = await fetch(url, {
                 method: 'PUT',
-                body: JSON.stringify({
-                    cours_id: item?.id,
-                    user_id: session?.user.id,
-                }),
+                body: JSON.stringify({ cours_id: item?.id, user_id: session?.user.id }),
                 headers: { 'Content-Type': 'application/json' },
             })
             if (subscribe) {
-                await mutate(
-                    process.env.NEXT_PUBLIC_BACK_URL +
-                        `/api/my-courses/${session?.user.id}`
-                )
+                await mutate(`http://192.168.137.200:8000/api/my-courses/${session?.user.id}`)
             } else {
-                await mutate(
-                    process.env.NEXT_PUBLIC_BACK_URL +
-                        `/api/courses/${session?.user.id}`
-                )
+                await mutate(`http://192.168.137.200:8000/api/courses/${session?.user.id}`)
             }
             onClose()
         } catch (error) {
             console.error('Error uploading file:', error)
         }
     }
+
+  const handlePaymentMethodChange = (event) => {
+    setPaymentMethod(event.target.value);
+  };
+
+  const handlePaymentDetailsChange = (event) => {
+    setPaymentDetails(event.target.value);
+  };
     return (
         <>
             <Modal isOpen={isOpen} onClose={onClose}>
@@ -74,16 +92,67 @@ const CardCour: FC<Props> = ({ item, subscribe }) => {
                 <ModalContent>
                     <ModalHeader>S&apos;abonner</ModalHeader>
                     <ModalCloseButton />
-                    <ModalBody>{item?.description}</ModalBody>
+                    <ModalBody>{subscribe ?`${item?.description}`: <Stack align="center" spacing={4} mt={8}>
+      <Text fontWeight="bold" fontSize="xl">Step {step}</Text>
 
-                    <ModalFooter>
+      {step === 1 && (
+        <div>
+          <Text>Step 1: Select Payment Method</Text>
+    <form>
+        <FormControl mb={4}>
+          <FormLabel>Card Number</FormLabel>
+          <Input type="text" placeholder="Enter card number" />
+        </FormControl>
+
+        <FormControl mb={4}>
+          <FormLabel>Expiration Date</FormLabel>
+          <Input type="text" placeholder="MM/YY" />
+        </FormControl>
+
+        <FormControl mb={4}>
+          <FormLabel>CVC</FormLabel>
+          <Input type="text" placeholder="Enter CVC" />
+        </FormControl>
+      </form>
+        </div>
+      )}
+
+      {step === 2 && ( 
+        <div>
+          <Text>Step 3: Confirm Payment</Text>
+          {/* Add your payment confirmation component here */}
+        </div>
+      )}
+
+      <ButtonGroup mt={4}>
+        {step > 1 && (
+          <Button colorScheme="blue" onClick={handlePrevStep}>
+            Previous
+          </Button>
+        )}
+
+        {step ==1 && (
+          <Button colorScheme="blue" onClick={handleNextStep}>
+            Next
+          </Button>
+        )}
+
+        {step === 2 && (
+          <Button colorScheme="green" onClick={handleClick}>
+S&apos;abonner
+          </Button>
+        )}
+      </ButtonGroup>
+    </Stack>} </ModalBody>
+
+                    {subscribe?<ModalFooter>
                         <Button colorScheme="pink" mr={3} onClick={onClose}>
                             Close
                         </Button>
                         <Button variant="ghost" onClick={handleClick}>
-                            {subscribe ? 'desabonner' : "s'abonner"}
+                       desabonner
                         </Button>
-                    </ModalFooter>
+                    </ModalFooter>: ""}
                 </ModalContent>
             </Modal>
             <Card>

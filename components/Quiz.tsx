@@ -55,7 +55,7 @@ const Quiz = () => {
                 note: `${scorePercentage}`,
             }
             const response = await fetch(
-                process.env.NEXT_PUBLIC_BACK_URL + `/api/add_qcm_result',
+                process.env.NEXT_PUBLIC_BACK_URL + '/api/add_qcm_result',
                 {
                     method: 'POST',
                     body: JSON.stringify(body),
