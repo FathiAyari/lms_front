@@ -59,7 +59,7 @@ const schema = yup.object().shape({
 
 const Teacher = () => {
     const { data: teachers } = useSWR(
-        `http://192.168.137.200:8000/api/user_list/teacher`,
+        process.env.NEXT_PUBLIC_BACK_URL + `/api/user_list/teacher`,
         fetcher
     )
 
@@ -84,21 +84,28 @@ const Teacher = () => {
         resolver: yupResolver(schema),
     })
     const onSubmit = async (data) => {
-        await fetch('http://192.168.137.200:8000/api/register', {
+        await fetch(process.env.NEXT_PUBLIC_BACK_URL + '/api/register', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: { 'Content-Type': 'application/json' },
         })
-        await mutate(`http://192.168.137.200:8000/api/user_list/teacher`)
+        await mutate(
+            process.env.NEXT_PUBLIC_BACK_URL + `/api/user_list/teacher`
+        )
         onClose()
     }
     const confirmUser = async (id) => {
-        await fetch('http://192.168.137.200:8000/api/confirm_account/' + id, {
-            method: 'PUT',
+        await fetch(
+            process.env.NEXT_PUBLIC_BACK_URL + '/api/confirm_account/' + id,
+            {
+                method: 'PUT',
 
-            headers: { 'Content-Type': 'application/json' },
-        })
-        await mutate(`http://192.168.137.200:8000/api/user_list/teacher`)
+                headers: { 'Content-Type': 'application/json' },
+            }
+        )
+        await mutate(
+            process.env.NEXT_PUBLIC_BACK_URL + `/api/user_list/teacher`
+        )
     }
 
     const handleShowPassword = () => {

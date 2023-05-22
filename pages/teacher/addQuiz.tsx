@@ -100,7 +100,7 @@ const Quiz = () => {
             }
             console.log(body)
             const response = await fetch(
-                'http://192.168.137.200:8000/api/add_qcm',
+                process.env.NEXT_PUBLIC_BACK_URL + '/api/add_qcm',
                 {
                     method: 'POST',
                     body: JSON.stringify(body),

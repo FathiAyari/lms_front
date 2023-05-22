@@ -36,22 +36,31 @@ interface Props {
 
 const CardCour: FC<Props> = ({ item, subscribe }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
-const {data:session}=useSession()
-    
+    const { data: session } = useSession()
+
     const handleClick = async () => {
         const url = subscribe
-            ? 'http://192.168.137.200:8000/api/unsubscribe'
-            : 'http://192.168.137.200:8000/api/subscribe'
+            ? process.env.NEXT_PUBLIC_BACK_URL + '/api/unsubscribe'
+            : process.env.NEXT_PUBLIC_BACK_URL + '/api/subscribe'
         try {
             const response = await fetch(url, {
                 method: 'PUT',
-                body: JSON.stringify({ cours_id: item?.id, user_id: session?.user.id }),
+                body: JSON.stringify({
+                    cours_id: item?.id,
+                    user_id: session?.user.id,
+                }),
                 headers: { 'Content-Type': 'application/json' },
             })
             if (subscribe) {
-                await mutate(`http://192.168.137.200:8000/api/my-courses/${session?.user.id}`)
+                await mutate(
+                    process.env.NEXT_PUBLIC_BACK_URL +
+                        `/api/my-courses/${session?.user.id}`
+                )
             } else {
-                await mutate(`http://192.168.137.200:8000/api/courses/${session?.user.id}`)
+                await mutate(
+                    process.env.NEXT_PUBLIC_BACK_URL +
+                        `/api/courses/${session?.user.id}`
+                )
             }
             onClose()
         } catch (error) {

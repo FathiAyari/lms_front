@@ -13,11 +13,12 @@ const ChatBox = () => {
     const senderId = session?.user?.id
     const reciverId = router.query.reciverId
     const { data: chats } = useSWR(
-        `http://192.168.137.200:8000/api/get_chats/${senderId}/${reciverId}`,
+        process.env.NEXT_PUBLIC_BACK_URL +
+            `/api/get_chats/${senderId}/${reciverId}`,
         fetcher
     )
     const { data: teachers } = useSWR(
-        `http://192.168.137.200:8000/api/user_list/teacher`,
+        process.env.NEXT_PUBLIC_BACK_URL + `/api/user_list/teacher`,
         fetcher
     )
     return (

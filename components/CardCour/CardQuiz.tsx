@@ -35,7 +35,7 @@ interface Props {
 const CardQuiz: FC<Props> = ({ item, subscribe }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { data: cours } = useSWR(
-        `http://192.168.137.200:8000/api/cours/${item?.course}`,
+        process.env.NEXT_PUBLIC_BACK_URL + `/api/cours/${item?.course}`,
         fetcher
     )
 

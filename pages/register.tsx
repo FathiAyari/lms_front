@@ -73,7 +73,7 @@ export default function Register() {
     const onSubmit = async (data) => {
         try {
             const response = await fetch(
-                'http://192.168.137.200:8000/api/register',
+                process.env.NEXT_PUBLIC_BACK_URL + '/api/register',
                 {
                     method: 'POST',
                     body: JSON.stringify(data),

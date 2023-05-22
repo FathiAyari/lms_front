@@ -16,7 +16,7 @@ const options: NextAuthOptions = {
                 try {
                     // Fetch data from API and validate credentials
                     const response = await fetch(
-                        'http://192.168.137.200:8000/api/login',
+                        process.env.NEXT_PUBLIC_BACK_URL + '/api/login',
                         {
                             method: 'POST',
                             body: JSON.stringify(credentials),

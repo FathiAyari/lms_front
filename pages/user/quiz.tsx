@@ -36,13 +36,16 @@ const Quiz = () => {
     const router = useRouter()
     const { data } = useSWR(
         session?.user.id
-            ? 'http://192.168.137.200:8000/api/student_qcm/' + session.user.id
+            ? process.env.NEXT_PUBLIC_BACK_URL +
+                  '/api/student_qcm/' +
+                  session.user.id
             : null,
         fetcher
     )
     const { data: doneQuiz } = useSWR(
         session?.user.id
-            ? 'http://192.168.137.200:8000/api/student_qcm_passed/' +
+            ? process.env.NEXT_PUBLIC_BACK_URL +
+                  '/api/student_qcm_passed/' +
                   session.user.id
             : null,
         fetcher

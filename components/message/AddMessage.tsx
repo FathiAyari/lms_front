@@ -7,7 +7,7 @@ const AddMessage = ({ senderId, reciverId }: any) => {
 
     const onSubmit = async () => {
         setLoading(true)
-        await fetch('http://192.168.137.200:8000/api/add_chat', {
+        await fetch(process.env.NEXT_PUBLIC_BACK_URL + '/api/add_chat', {
             method: 'POST',
             body: JSON.stringify({
                 message,
@@ -17,7 +17,8 @@ const AddMessage = ({ senderId, reciverId }: any) => {
             headers: { 'Content-Type': 'application/json' },
         })
         await mutate(
-            `http://192.168.137.200:8000/api/get_chats/${senderId}/${reciverId}`
+            process.env.NEXT_PUBLIC_BACK_URL +
+                `/api/get_chats/${senderId}/${reciverId}`
         )
         setMessage('')
         setLoading(false)

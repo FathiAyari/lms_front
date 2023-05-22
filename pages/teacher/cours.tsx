@@ -51,11 +51,12 @@ const Cours = () => {
     const [file, setFile] = useState(null)
 
     const { data: categories } = useSWR(
-        'http://192.168.137.200:8000/api/get_categories',
+        process.env.NEXT_PUBLIC_BACK_URL + '/api/get_categories',
         fetcher
     )
     const { data, mutate } = useSWR(
-        `http://192.168.137.200:8000/api/teacher-courses/${session?.user.id}`,
+        process.env.NEXT_PUBLIC_BACK_URL +
+            `/api/teacher-courses/${session?.user.id}`,
         fetcher
     )
 
@@ -80,7 +81,7 @@ const Cours = () => {
             formData.append('category', categorie)
             formData.append('title', titre)
             const response = await fetch(
-                'http://192.168.137.200:8000/api/add-cours',
+                process.env.NEXT_PUBLIC_BACK_URL + '/api/add-cours',
                 {
                     method: 'POST',
                     body: formData,
@@ -94,7 +95,7 @@ const Cours = () => {
     const handleDelete = async (id) => {
         try {
             const response = await fetch(
-                `http://192.168.137.200:8000/api/delete-course/${id}`,
+                process.env.NEXT_PUBLIC_BACK_URL + `/api/delete-course/${id}`,
                 {
                     method: 'DELETE',
                 }
