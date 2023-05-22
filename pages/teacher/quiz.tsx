@@ -1,220 +1,141 @@
-import LayoutTeacher from '@/components/layoutTeacher';
-import { fetcher } from '@/lib/fetcher';
-import { Box, Heading, Input, Button, ButtonGroup, HStack, Spinner, Alert, AlertIcon } from '@chakra-ui/react';
-import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
-import Select from 'react-select';
-import useSWR, { mutate } from 'swr';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import CardQuiz from '@/components/CardCour/CardQuiz'
+import LayoutUser from '@/components/layoutUser'
+import { fetcher } from '@/lib/fetcher'
+import {
+    Box,
+    Button,
+    Card,
+    CardBody,
+    CardHeader,
+    Flex,
+    Heading,
+    SimpleGrid,
+    Stack,
+    StackDivider,
+    Tab,
+    TabList,
+    TabPanel,
+    TabPanels,
+    Tabs,
+    Text,
+    useColorModeValue,
+} from '@chakra-ui/react'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
 
+import React, { useState } from 'react'
+import useSWR from 'swr'
 
 const Quiz = () => {
- const [inputFields, setInputFields] = useState([]);
-  const [courId, setCourId] = useState('');
-    const [loading, setLoading] = useState(false)
+    const { data: session } = useSession()
 
-  const handleAddField = () => {
-    setInputFields([...inputFields, { question: '', choices: ['', '', ''], answer: '' }]);
-  };
-    const {data:cours}=useSWR("http://192.168.137.200:8000/api/teacher-courses/9",fetcher)
-    const options = cours?.map((item) => ({
-    value: item.id,
-    label: item.title,
-  }));
-  const handleChange = (index, field, event) => {
-    const values = [...inputFields];
-    if (field === 'question') {
-      values[index].question = event.target.value;
-    } else if (field.includes('choice')) {
-      const choiceIndex = parseInt(field[field.length - 1]);
-      values[index].choices[choiceIndex] = event.target.value;
-    } else if (field === 'answer') {
-      values[index].answer = event.target.value;
-    }
-    setInputFields(values);
-  };
+    const colors = useColorModeValue(
+        ['red.50', 'blue.50'],
+        ['red.900', 'blue.900']
+    )
+    const [tabIndex, setTabIndex] = useState(0)
+    const bg = colors[tabIndex]
+    const router = useRouter()
+    const { data } = useSWR(
+        session?.user.id
+            ? 'http://192.168.137.200:8000/api/teacher_qcm/' + session.user.id
+            : null,
+        fetcher
+    )
+    const { data: doneQuiz } = useSWR(
+        session?.user.id
+            ? 'http://192.168.137.200:8000/api/teacher_qcm_passed/' +
+                  session.user.id
+            : null,
+        fetcher
+    )
 
-  const handleRemoveField = (index) => {
-    const values = [...inputFields];
-    values.splice(index, 1);
-    setInputFields(values);
-  };
+    return (
+        <Box w={'100%'} p={6}>
+            <Heading textAlign={'center'} py={16}>
+                Mes Quiz
+            </Heading>
+            <Flex w="full" justifyContent="flex-end">
+                <Button
+                    variant="solid"
+                    colorScheme="blue"
+                    mb="2"
+                    onClick={() => router.push('/teacher/addQuiz')}
+                >
+                    Add QCM
+                </Button>
+            </Flex>
+            <Tabs
+                isFitted
+                variant="enclosed"
+                onChange={(index) => setTabIndex(index)}
+                bg={bg}
+            >
+                <TabList mb="1em">
+                    <Tab>Quiz</Tab>
+                    <Tab>Quiz Terminer</Tab>
+                </TabList>
+                <TabPanels overflow={'auto'}>
+                    <TabPanel>
+                        <SimpleGrid spacing={4} columns={[2, null, 4]} pb={16}>
+                            {data?.map((item, key) => (
+                                <CardQuiz
+                                    item={item}
+                                    key={key}
+                                    subscribe={true}
+                                />
+                            ))}
+                        </SimpleGrid>
+                    </TabPanel>
+                    <TabPanel>
+                        <SimpleGrid spacing={4} columns={[2, null, 4]} pb={16}>
+                            {doneQuiz?.map((item, key) => (
+                                <Card key={key}>
+                                    <CardHeader>
+                                        <Heading size="md">
+                                            {item.qcm.name}
+                                        </Heading>
+                                    </CardHeader>
 
-  const handleMoveUp = (index) => {
-    if (index === 0) return;
-    const values = [...inputFields];
-    const temp = values[index];
-    values[index] = values[index - 1];
-    values[index - 1] = temp;
-    setInputFields(values);
-  };
+                                    <CardBody>
+                                        <Stack
+                                            divider={<StackDivider />}
+                                            spacing="4"
+                                        >
+                                            <Box>
+                                                <Heading
+                                                    size="xs"
+                                                    textTransform="uppercase"
+                                                >
+                                                    Cour
+                                                </Heading>
+                                                <Text pt="2" fontSize="sm">
+                                                    {item.qcm.course.title}
+                                                </Text>
+                                            </Box>
 
-  const handleMoveDown = (index) => {
-    if (index === inputFields.length - 1) return;
-    const values = [...inputFields];
-    const temp = values[index];
-    values[index] = values[index + 1];
-    values[index + 1] = temp;
-    setInputFields(values);
-  };
+                                            <Box>
+                                                <Heading
+                                                    size="xs"
+                                                    textTransform="uppercase"
+                                                >
+                                                    Note
+                                                </Heading>
+                                                <Text pt="2" fontSize="sm">
+                                                    {item.note} %
+                                                </Text>
+                                            </Box>
+                                        </Stack>
+                                    </CardBody>
+                                </Card>
+                            ))}
+                        </SimpleGrid>
+                    </TabPanel>
+                </TabPanels>
+            </Tabs>
+        </Box>
+    )
+}
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(inputFields); // You can handle the form submission logic here
-  };
-
-
-  const handleSelectChange = (selectedOption) => {
-    setCourId(selectedOption);
-  };
-
-  const handleAdd = async () => {
-
-    try {
-      setLoading(true)
-      const body = {
-        //@ts-ignore
-        course: parseInt(courId.value) ,
-        deadLine: format(new Date(), "yyyy-MM-dd"),
-        choices:inputFields
-        
-       }
-           console.log(body)
-            const response = await fetch(
-              "http://192.168.137.200:8000/api/add_qcm",
-                {
-                    method: 'POST',
-                  body: JSON.stringify(body),
- headers: { 'Content-Type': 'application/json' },            
-                }
-            )
-      setLoading(false)
-       if (response.ok) {
-      toast.success('Form submitted successfully!', {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000, // Adjust the duration as needed
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-
-      // Clear the form or perform other actions
-
-    } else {
-      // Handle error case
-      toast.error('Form submission failed!', {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000, // Adjust the duration as needed
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    }
-      
-        } catch (error) {
-            console.error('Error uploading file:', error)
-        }
-  }
-
-  return (
-    <Box w="100%" p={6}>
-      <Heading textAlign="center" py={16}>
-        Mes Quiz
-          </Heading>
-           <Select
-        options={options}
-        value={courId}
-        onChange={handleSelectChange}
-        isClearable={true}
-              placeholder="Select an option"
-              className='py-6'
-      />
-          <form onSubmit={handleSubmit}>
-              
-        {inputFields.map((field, index) => (
-          <div key={index} className="mb-4 bg-white rounded-lg p-6">
-            <label htmlFor={`question-${index}`}>Question {index + 1}:</label>
-            <Input
-              type="text"
-              id={`question-${index}`}
-              value={field.question}
-              onChange={(e) => handleChange(index, 'question', e)}
-              placeholder="Enter question"
-            />
-            <div className="mt-2">
-              {field.choices.map((choice, choiceIndex) => (
-                <div key={choiceIndex}>
-                  <label htmlFor={`choice-${index}-${choiceIndex}`}>Choix {choiceIndex + 1}:</label>
-                  <Input
-                    type="text"
-                    id={`choice-${index}-${choiceIndex}`}
-                    value={choice}
-                    onChange={(e) => handleChange(index, `choice${choiceIndex}`, e)}
-                    placeholder={`Enter choice ${choiceIndex + 1}`}
-                  />
-                </div>
-              ))}
-            </div>
-            <label htmlFor={`answer-${index}`}>Reponse:</label>
-            <Select
-              options={field.choices.map((choice, choiceIndex) => ({
-                value: choice,
-                label: `Choix ${choiceIndex + 1}`
-              }))}
-              value={{ value: field.answer, label: `Choix ${
-field.choices.indexOf(field.answer) + 1}` }}
-onChange={(selectedOption) => handleChange(index, 'answer', { target: { value: selectedOption.value } })}
-placeholder="Select answer"
-isSearchable={false}
-/>
-<ButtonGroup mt={2}>
-<Button
-onClick={() => handleMoveUp(index)}
-disabled={index === 0}
->
-Move Up
-</Button>
-<Button
-onClick={() => handleMoveDown(index)}
-disabled={index === inputFields.length - 1}
->
-Move Down
-</Button>
-<Button
-onClick={() => handleRemoveField(index)}
-colorScheme="red"
->
-Remove Field
-</Button>
-</ButtonGroup>
-</div>
-        ))}
-   <HStack> <Button
-      onClick={handleAddField}
-      colorScheme="blue"
-
-    >
-      Add Field
-    </Button>
-
-    <Button
-      type="button"
-      colorScheme="green"
-onClick={handleAdd}
-    >
-            Submit
-            {loading? <Spinner />:""}
-    </Button></HStack>
-      </form>
-       <ToastContainer />
-</Box>
-);
-};
-
-export default Quiz;
-Quiz.Layout=LayoutTeacher
+export default Quiz
+Quiz.Layout = LayoutUser
