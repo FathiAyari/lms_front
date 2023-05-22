@@ -42,15 +42,23 @@ const Devoirs = () => {
     const initialRef = React.useRef(null)
     const finalRef = React.useRef(null)
     const [titre, setTitre] = useState('')
-    const [categorie, setCategorie] = useState('')
+    const [course, setCourse] = useState('')
     const [description, setDescription] = useState('')
+    const [deadLine, setDeadLine] = useState('')
     const [file, setFile] = useState(null)
 
-    const { data } = useSWR(
+    const { data, mutate } = useSWR(
         process.env.NEXT_PUBLIC_BACK_URL +
             `/api/user_exams/${session?.user.id}`,
         fetcher
     )
+    const { data: cours } = useSWR(
+        process.env.NEXT_PUBLIC_BACK_URL +
+            '/api/teacher-courses/' +
+            session?.user.id,
+        fetcher
+    )
+
     const handleFileChange = (event: any) => {
         setFile(event.target.files[0])
     }
@@ -66,11 +74,14 @@ const Devoirs = () => {
             formData.append('exam', file)
             //@ts-ignore
             formData.append('user', session?.user.id)
-            formData.append('course', 5 as any)
+            formData.append('course', course)
             //@ts-ignore
-            formData.append('deadLine', format(new Date(), 'yyyy-MM-dd'))
-            formData.append('description', 'testt')
-            formData.append('title', 'titre')
+            formData.append(
+                'deadLine',
+                format(new Date(deadLine), 'yyyy-MM-dd')
+            )
+            formData.append('description', description)
+            formData.append('title', titre)
             const response = await fetch(
                 process.env.NEXT_PUBLIC_BACK_URL + '/api/add_exam',
                 {
@@ -78,9 +89,25 @@ const Devoirs = () => {
                     body: formData,
                 }
             )
+            await mutate()
+            onClose()
             console.log(response)
         } catch (error) {
             console.error('Error uploading file:', error)
+        }
+    }
+    const handleDelete = async (id) => {
+        try {
+            const response = await fetch(
+                process.env.NEXT_PUBLIC_BACK_URL + `/api/delete_exam/${id}`,
+                {
+                    method: 'DELETE',
+                }
+            )
+            await mutate()
+            onClose()
+        } catch (error) {
+            console.error('Error deleting item:', error)
         }
     }
     return (
@@ -108,9 +135,9 @@ const Devoirs = () => {
             <Table variant="striped" colorScheme="gray" bg={'white'}>
                 <Thead>
                     <Tr>
-                        <Th>Exam Name</Th>
-                        <Th>matter Name</Th>
-                        <Th>Creation Date</Th>
+                        <Th>Title</Th>
+                        <Th>Description</Th>
+                        <Th>DeadLine</Th>
                         <Th>Action</Th>
                     </Tr>
                 </Thead>
@@ -118,8 +145,10 @@ const Devoirs = () => {
                     {data?.map((item: any) => (
                         <Tr key={item.id}>
                             <Td>{item.title}</Td>
-                            <Td>{item.categorie}</Td>
                             <Td>{item.description}</Td>
+                            <Td>
+                                {format(new Date(item.deadLine), 'dd/MM/yyyy')}
+                            </Td>
                             <Td>
                                 <IconButton
                                     aria-label="View assignment"
@@ -135,6 +164,7 @@ const Devoirs = () => {
                                     aria-label="View assignment"
                                     icon={<MdDeleteOutline />}
                                     variant="ghost"
+                                    onClick={() => handleDelete(item.id)}
                                 />
                             </Td>
                         </Tr>
@@ -150,7 +180,7 @@ const Devoirs = () => {
             >
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Ajouter Cours</ModalHeader>
+                    <ModalHeader>Ajouter Devoir</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={6}>
                         <FormControl>
@@ -164,11 +194,16 @@ const Devoirs = () => {
                         </FormControl>
 
                         <FormControl mt={4}>
-                            <FormLabel>Catégorie</FormLabel>
-                            <Select placeholder="Select Categorie">
-                                <option value="option1">Option 1</option>
-                                <option value="option2">Option 2</option>
-                                <option value="option3">Option 3</option>
+                            <FormLabel>Coure</FormLabel>
+                            <Select
+                                placeholder="Select Coure"
+                                onChange={(e) => setCourse(e.target.value)}
+                            >
+                                {cours?.map((item, index) => (
+                                    <option key={index} value={item.id}>
+                                        {item.title}
+                                    </option>
+                                ))}
                             </Select>
                         </FormControl>
 
@@ -178,6 +213,15 @@ const Devoirs = () => {
                                 placeholder="Description"
                                 onChange={(e) => setDescription(e.target.value)}
                                 value={description}
+                            />
+                        </FormControl>
+                        <FormControl mt={4}>
+                            <FormLabel>Deadline</FormLabel>
+                            <Input
+                                type="date"
+                                placeholder="Deadline"
+                                onChange={(e) => setDeadLine(e.target.value)}
+                                value={deadLine}
                             />
                         </FormControl>
                         <FormControl mt={4}>

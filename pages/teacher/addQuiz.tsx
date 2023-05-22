@@ -36,7 +36,9 @@ const Quiz = () => {
         ])
     }
     const { data: cours } = useSWR(
-        process.env.NEXT_PUBLIC_BACK_URL + '/api/teacher-courses/' + 9,
+        process.env.NEXT_PUBLIC_BACK_URL +
+            '/api/teacher-courses/' +
+            session?.user.id,
         fetcher
     )
     const options = cours?.map((item) => ({

@@ -1,5 +1,5 @@
 import CardQuiz from '@/components/CardCour/CardQuiz'
-import LayoutUser from '@/components/layoutUser'
+import layoutTeacher from '@/components/layoutTeacher'
 import { fetcher } from '@/lib/fetcher'
 import {
     Box,
@@ -141,4 +141,4 @@ const Quiz = () => {
 }
 
 export default Quiz
-Quiz.Layout = LayoutUser
+Quiz.Layout = layoutTeacher

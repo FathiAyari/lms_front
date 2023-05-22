@@ -127,14 +127,14 @@ export default function Sidebar() {
                         </MenuItem>
                         <MenuDivider />
 
-                        <MenuItem gap={2}>
-                            <MdLockOutline
-                                size={20}
-                                onClick={async () => {
-                                    await signOut({ redirect: false })
-                                    router.push('/')
-                                }}
-                            />
+                        <MenuItem
+                            gap={2}
+                            onClick={async () => {
+                                await signOut({ redirect: false })
+                                router.push('/')
+                            }}
+                        >
+                            <MdLockOutline size={20} />
                             Se deconnecter
                         </MenuItem>
                     </MenuList>

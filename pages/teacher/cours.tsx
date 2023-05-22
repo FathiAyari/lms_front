@@ -36,7 +36,7 @@ import React, { useState } from 'react'
 import { BiPencil } from 'react-icons/bi'
 import { BsPlus } from 'react-icons/bs'
 import { MdDeleteOutline } from 'react-icons/md'
-import useSWR, { mutate } from 'swr'
+import useSWR from 'swr'
 
 const Cours = () => {
     const { data: session } = useSession()
@@ -87,6 +87,7 @@ const Cours = () => {
                     body: formData,
                 }
             )
+            await mutate()
             onClose()
         } catch (error) {
             console.error('Error uploading file:', error)
@@ -141,14 +142,14 @@ const Cours = () => {
                     {data?.map((item: any) => (
                         <Tr key={item.id}>
                             <Td>{item.title}</Td>
-                            <Td>{item.categorie}</Td>
+                            <Td>{item.category.name}</Td>
                             <Td>{item.description}</Td>
                             <Td>
-                                <IconButton
+                                {/* <IconButton
                                     aria-label="View assignment"
                                     icon={<BiPencil />}
                                     variant="ghost"
-                                />
+                                /> */}
 
                                 <Popover>
                                     <PopoverTrigger>
