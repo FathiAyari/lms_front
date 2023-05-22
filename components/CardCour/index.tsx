@@ -34,6 +34,7 @@ import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React, { FC, useState } from 'react'
 import { BsFillCreditCardFill, BsFolderMinus, BsNodeMinus, BsPlus } from 'react-icons/bs'
+import { FiEye } from 'react-icons/fi'
 import Placeholder from 'react-select/dist/declarations/src/components/Placeholder'
 import { json } from 'stream/consumers'
 import { mutate } from 'swr'
@@ -156,8 +157,9 @@ S&apos;abonner
                 </ModalContent>
             </Modal>
             <Card>
-                <CardHeader>
-                    <Heading size="md">{item.title}</Heading>
+                <CardHeader className='flex flex-row justify-between items-center'>
+            <Heading size="md">{item.title}</Heading>
+             <Box className='flex flex-col justify-center items-center p-1 text-gray-400'><FiEye/>30</Box>
                 </CardHeader>
 
                 <CardBody>

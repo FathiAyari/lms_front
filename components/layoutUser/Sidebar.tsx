@@ -132,7 +132,7 @@ export default function Sidebar() {
                                 <Heading as="h3" size="sm">
                                     {session.user.name}
                                 </Heading>
-                                <Text color="gray">user</Text>
+                                <Text color="gray">Etudiant</Text>
                             </Flex>
                         </Flex>
                     </MenuButton>

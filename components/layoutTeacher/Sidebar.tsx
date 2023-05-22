@@ -135,10 +135,10 @@ export default function Sidebar() {
                                 ml={4}
                                 display={navSize == 'small' ? 'none' : 'flex'}
                             >
-                                <Heading as="h3" size="sm">
+                                <Heading as="h3" size="sm" textColor={"white"}>
                                     {session.user.name}
                                 </Heading>
-                                <Text color="gray">Teacher</Text>
+                                <Text color="gray">Enseignant</Text>
                             </Flex>
                         </Flex>
                     </MenuButton>

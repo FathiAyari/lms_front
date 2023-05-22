@@ -25,9 +25,11 @@ import {
 import NavItem from './NavItem'
 import { useRouter } from 'next/router'
 import { FaHospitalUser, FaUserGraduate } from 'react-icons/fa'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 
 export default function Sidebar() {
+    const { data: session, status } = useSession()
+
     const router = useRouter()
     const [navSize, changeNavSize] = useState('large')
     return (
@@ -111,8 +113,9 @@ export default function Sidebar() {
                                 ml={4}
                                 display={navSize == 'small' ? 'none' : 'flex'}
                             >
-                                <Heading as="h3" size="sm">
-                                    adminName
+                                <Heading as="h3" size="sm" textColor={"white"}>
+                                    {session?.user.name}
+
                                 </Heading>
                                 <Text color="gray">admin</Text>
                             </Flex>

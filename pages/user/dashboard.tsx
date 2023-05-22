@@ -48,7 +48,7 @@ const UserDashboard = () => {
                         <div className="text-gray-500 font-bold">
                             Tous les Quiz
                         </div>
-                        <div className="text-black font-bold text-3xl">999</div>
+                        <div className="text-black font-bold text-3xl">7</div>
                     </div>
                     <div className="h-[200px] w-[200px] bg-white rounded-lg shadow-lg flex flex-col items-center gap-4 p-2">
                         <div className="p-4 rounded-full shadow-2xl flex items-center justify-center">
@@ -68,7 +68,7 @@ const UserDashboard = () => {
                         <div className="text-gray-500 font-bold">
                             Tous les devoirs
                         </div>
-                        <div className="text-black font-bold text-3xl">999</div>
+                        <div className="text-black font-bold text-3xl">9</div>
                     </div>
                 </SimpleGrid>
                 <InputGroup mt={6}>
