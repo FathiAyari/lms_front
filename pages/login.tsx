@@ -313,6 +313,11 @@ const Login = () => {
                         <Box w="full" textAlign="center">
                             <Link href="/register">Cree un compte</Link>
                         </Box>
+                        <Box w="full" textAlign="center">
+                            <Link href="/reset-password">
+                                Mot de passe oubliée
+                            </Link>
+                        </Box>
                     </Box>
                 </Stack>
             </Container>
