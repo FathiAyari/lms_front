@@ -34,6 +34,7 @@ import {
 import { useSession } from 'next-auth/react'
 import React, { useState } from 'react'
 import { BiPencil } from 'react-icons/bi'
+
 import { BsPlus } from 'react-icons/bs'
 import { MdDeleteOutline } from 'react-icons/md'
 import useSWR from 'swr'
@@ -45,6 +46,7 @@ const Cours = () => {
     const initialRef = React.useRef(null)
 
     const finalRef = React.useRef(null)
+    const [selectedCours, setSelectedCours] = useState<any>()
     const [titre, setTitre] = useState('')
     const [categorie, setCategorie] = useState('')
     const [description, setDescription] = useState('')
@@ -67,7 +69,7 @@ const Cours = () => {
         try {
             const formData = new FormData()
 
-            if (!file) {
+            if (!selectedCours && !file) {
                 console.error('No file selected')
                 return
             }
@@ -80,13 +82,24 @@ const Cours = () => {
             //@ts-ignore
             formData.append('category', categorie)
             formData.append('title', titre)
-            const response = await fetch(
-                process.env.NEXT_PUBLIC_BACK_URL + '/api/add-cours',
-                {
-                    method: 'POST',
-                    body: formData,
-                }
-            )
+            if (selectedCours?.id)
+                await fetch(
+                    process.env.NEXT_PUBLIC_BACK_URL +
+                        '/api/update_cours/' +
+                        selectedCours.id,
+                    {
+                        method: 'PUT',
+                        body: formData,
+                    }
+                )
+            else
+                await fetch(
+                    process.env.NEXT_PUBLIC_BACK_URL + '/api/add-cours',
+                    {
+                        method: 'POST',
+                        body: formData,
+                    }
+                )
             await mutate()
             onClose()
         } catch (error) {
@@ -121,7 +134,10 @@ const Cours = () => {
             >
                 {' '}
                 <Button
-                    onClick={onOpen}
+                    onClick={() => {
+                        setSelectedCours(undefined)
+                        onOpen()
+                    }}
                     rightIcon={<BsPlus />}
                     colorScheme="blue"
                     variant="outline"
@@ -135,6 +151,7 @@ const Cours = () => {
                         <Th>Assignment Name</Th>
                         <Th>matter Name</Th>
                         <Th>Creation Date</Th>
+                        <Th>Nombre d&apos;inscription</Th>
                         <Th>Action</Th>
                     </Tr>
                 </Thead>
@@ -144,12 +161,22 @@ const Cours = () => {
                             <Td>{item.title}</Td>
                             <Td>{item.category.name}</Td>
                             <Td>{item.description}</Td>
+                            <Td>{item.students?.length || 0}</Td>
                             <Td>
-                                {/* <IconButton
+                                <IconButton
                                     aria-label="View assignment"
                                     icon={<BiPencil />}
                                     variant="ghost"
-                                /> */}
+                                    onClick={() => {
+                                        setSelectedCours(item)
+
+                                        setTitre(item.title)
+                                        setCategorie(item.category.id)
+                                        setDescription(item.description)
+
+                                        onOpen()
+                                    }}
+                                />
 
                                 <Popover>
                                     <PopoverTrigger>
@@ -190,7 +217,9 @@ const Cours = () => {
             >
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Ajouter Cours</ModalHeader>
+                    <ModalHeader>
+                        {selectedCours ? 'Update' : 'Ajouter'} Cours
+                    </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={6}>
                         <FormControl>
@@ -206,6 +235,7 @@ const Cours = () => {
                         <FormControl mt={4}>
                             <FormLabel>Catégorie</FormLabel>
                             <Select
+                                value={categorie}
                                 placeholder="Select Categorie"
                                 onChange={(e) => setCategorie(e.target.value)}
                             >
@@ -226,8 +256,9 @@ const Cours = () => {
                             />
                         </FormControl>
                         <FormControl mt={4}>
-                            <FormLabel>Description</FormLabel>
+                            <FormLabel>File</FormLabel>
                             <Input
+                                required={!selectedCours}
                                 type="file"
                                 accept="application/pdf"
                                 onChange={handleFileChange}

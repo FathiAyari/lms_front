@@ -100,7 +100,16 @@ const Student = () => {
                 headers: { 'Content-Type': 'application/json' },
             }
         )
-        await mutate(process.env.NEXT_PUBLIC_BACK_URL + `/api/user_list/user`)
+        await mutate(
+            process.env.NEXT_PUBLIC_BACK_URL + `/api/user_list/student`
+        )
+    }
+    const deleteUser = (id) => {
+        fetch(process.env.NEXT_PUBLIC_BACK_URL + '/api/delete_account/' + id, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+        })
+        mutate(process.env.NEXT_PUBLIC_BACK_URL + `/api/user_list/student`)
     }
     const handleShowPassword = () => {
         setShowPassword(!showPassword)
@@ -174,6 +183,9 @@ const Student = () => {
                                                     aria-label="View assignment"
                                                     icon={<MdDeleteOutline />}
                                                     variant="ghost"
+                                                    onClick={() =>
+                                                        deleteUser(item.id)
+                                                    }
                                                 />
                                             </Td>
                                         </Tr>

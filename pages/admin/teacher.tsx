@@ -107,6 +107,13 @@ const Teacher = () => {
             process.env.NEXT_PUBLIC_BACK_URL + `/api/user_list/teacher`
         )
     }
+    const deleteUser = (id) => {
+        fetch(process.env.NEXT_PUBLIC_BACK_URL + '/api/delete_account/' + id, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+        })
+        mutate(process.env.NEXT_PUBLIC_BACK_URL + `/api/user_list/teacher`)
+    }
 
     const handleShowPassword = () => {
         setShowPassword(!showPassword)
@@ -180,6 +187,9 @@ const Teacher = () => {
                                                     aria-label="View assignment"
                                                     icon={<MdDeleteOutline />}
                                                     variant="ghost"
+                                                    onClick={() =>
+                                                        deleteUser(item.id)
+                                                    }
                                                 />
                                             </Td>
                                         </Tr>

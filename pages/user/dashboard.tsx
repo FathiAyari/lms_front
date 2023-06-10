@@ -1,4 +1,4 @@
-import React, { use, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
     Box,
     Divider,
@@ -20,6 +20,8 @@ import CardCour from '@/components/CardCour'
 import { useSession } from 'next-auth/react'
 
 const UserDashboard = () => {
+    const [input, setInput] = useState('')
+
     const { data: session, status } = useSession()
 
     const { data } = useSWR(
@@ -79,10 +81,24 @@ const UserDashboard = () => {
             <Heading w={'100%'} textAlign={'center'} p={16}>
                 Tous les cours
             </Heading>
+            <Box className="flex justify-end mb-2">
+                <Input
+                    bg={'white'}
+                    w={250}
+                    placeholder="Recherche"
+                    value={input}
+                    onChange={(e) => {
+                        console.log(e)
+                        setInput(e.target.value)
+                    }}
+                />
+            </Box>
             <SimpleGrid spacing={4} columns={[2, null, 4]} pb={16}>
-                {data?.map((item, key) => (
-                    <CardCour item={item} key={key} subscribe={false} />
-                ))}
+                {data
+                    ?.filter((e) => !input || e.title.includes(input))
+                    .map((item, key) => (
+                        <CardCour item={item} key={key} subscribe={false} />
+                    ))}
             </SimpleGrid>
         </Box>
     )
